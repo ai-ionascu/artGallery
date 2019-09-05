@@ -1,0 +1,7 @@
+/__pycache__/
+.c9
+.~c9*
+*.pyc
+*.sqlite3
+.gal/
+*.code-workspace
