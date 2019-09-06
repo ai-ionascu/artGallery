@@ -1,16 +1,10 @@
 from django.contrib import admin
-from .models import Profile, Address
+from .models import Profile, AddressMixin
 
 # Register your models here.
 
-class AddressInline(admin.StackedInline):
-    model = Address
-    verbose_name = 'Address'
-    verbose_name_plural = 'Address'
-    
 class ProfileAdmin(admin.ModelAdmin):
-    inlines = [
-        AddressInline,
-        ]
+
+    fields = ('user','profile_type', 'phone', 'street1','street2', 'city', 'county', 'country', 'zip_code')
 
 admin.site.register(Profile, ProfileAdmin)
