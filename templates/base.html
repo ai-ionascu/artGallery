@@ -14,7 +14,7 @@
                     <li class="nav-item px-3"><a href="{% url 'logout' %}">Logout</a></li>
                 {% else %}
                     <li class="nav-item px-3"><a href="{% url 'login' %}">Login</a></li>
-                    <li class="nav-item px-3"><a href="#">Register</a></li>
+                    <li class="nav-item px-3"><a href="{% url 'register' %}">Register</a></li>
                 {% endif %}
             </ul>
         </nav>
