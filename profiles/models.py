@@ -10,8 +10,8 @@ class AddressMixin(models.Model):
     class Meta:
         abstract = True
     
-    street1 = models.CharField(max_length=128, blank=True, default='')
-    street2 = models.CharField(max_length=128, blank=True, default='')
+    address_line1 = models.CharField(max_length=128, blank=True, default='')
+    address_line2 = models.CharField(max_length=128, blank=True, default='')
     city = models.CharField(max_length=64, blank=True, default='')
     county = models.CharField(max_length=64, blank=True, default='')
     country = models.CharField(max_length=64, blank=True, default='')

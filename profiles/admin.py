@@ -5,6 +5,6 @@ from .models import Profile, AddressMixin
 
 class ProfileAdmin(admin.ModelAdmin):
 
-    fields = ('user','profile_type', 'phone', 'street1','street2', 'city', 'county', 'country', 'zip_code')
+    fields = ('user','profile_type', 'phone', 'address_line1','address_line2', 'city', 'county', 'country', 'zip_code')
 
 admin.site.register(Profile, ProfileAdmin)

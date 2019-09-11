@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect, reverse
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
-from profiles.forms import UserLoginForm
+from profiles.forms import UserLoginForm, CustomRegistration
 
 # Create your views here.
 
@@ -55,21 +54,24 @@ def register_view(request):
         return redirect(reverse('index'))
 
     if request.method == 'POST':
-        reg_form = UserCreationForm(request.POST)
+        reg_form = CustomRegistration(request.POST)
 
         if reg_form.is_valid():
             reg_form.save()
-            messages.success(request,'You have been successfully registered.')
 
             user = auth.authenticate(username=request.POST['username'],
                                     password=request.POST['password1'])
 
             if user:
-                auth.login(user=user, request=request)
+                auth.login(request=request, user=user)
+                messages.success(request,'You have been successfully registered.')
+
+            else:
+                messages.error(request, 'Registration failed, please try again later.')
 
             return redirect(reverse('index'))
 
     else:
-        reg_form = UserCreationForm()
+        reg_form = CustomRegistration()
 
     return render(request, 'register.html', {'reg_form': reg_form})
