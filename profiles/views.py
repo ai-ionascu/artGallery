@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, reverse
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
-from profiles.forms import UserLoginForm, CustomRegistration
+from profiles.forms import UserLoginForm, RegistrationForm
 
 # Create your views here.
 
@@ -54,10 +54,20 @@ def register_view(request):
         return redirect(reverse('index'))
 
     if request.method == 'POST':
-        reg_form = CustomRegistration(request.POST)
+        reg_form = RegistrationForm(request.POST)
 
         if reg_form.is_valid():
-            reg_form.save()
+            user = reg_form.save()
+
+            user.profile.profile_type = reg_form.cleaned_data.get('profile_type')
+            user.profile.phone = reg_form.cleaned_data.get('phone')
+            user.profile.address_line1 = reg_form.cleaned_data.get('address_line1')
+            user.profile.address_line2 = reg_form.cleaned_data.get('address_line2')
+            user.profile.city = reg_form.cleaned_data.get('city')
+            user.profile.county = reg_form.cleaned_data.get('county')
+            user.profile.country = reg_form.cleaned_data.get('country')
+            user.profile.zip_code = reg_form.cleaned_data.get('zip_code')
+            user.save()
 
             user = auth.authenticate(username=request.POST['username'],
                                     password=request.POST['password1'])
@@ -72,6 +82,6 @@ def register_view(request):
             return redirect(reverse('index'))
 
     else:
-        reg_form = CustomRegistration()
+        reg_form = RegistrationForm()
 
     return render(request, 'register.html', {'reg_form': reg_form})
