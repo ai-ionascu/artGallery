@@ -28,6 +28,15 @@ class RegistrationForm(UserCreationForm):
         model = User
         fields = ('profile_type', 'username','first_name', 'last_name', 'email', 'phone', 'password1', 'password2')
 
+    def clean_email(self):
+        
+        email = self.cleaned_data.get('email')
+        username = self.cleaned_data.get('username')
+        
+        if User.objects.filter(email=email).exclude(username=username):
+            raise forms.ValidationError(u'Email address must be unique.')
+        return email    
+
     def save(self, commit=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data['email']
