@@ -89,12 +89,20 @@ def register_view(request):
 def edit_profile_view(request):
     
     if request.method == 'POST':
-        edit_user_form = EditUserForm(request.POST)
-        edit_profile_form = EditProfileForm(request.POST)
+        edit_user_form = EditUserForm(request.POST, instance=request.user)
+        edit_profile_form = EditProfileForm(request.POST, request.FILES, instance=request.user.profile)
+
+        if edit_user_form.is_valid and edit_profile_form.is_valid:
+            user_info = edit_user_form.save()
+            profile_info = edit_profile_form.save(commit=False)
+            profile_info.user = user_info
+            profile_info.save()
+            messages.success(request,'Your profile has been successfully updated.')
+            return redirect(reverse('index'))
 
     else:
-        edit_user_form = EditUserForm()
-        edit_profile_form = EditProfileForm()
+        edit_user_form = EditUserForm(instance=request.user)
+        edit_profile_form = EditProfileForm(instance=request.user.profile)
 
     
     return render(request, 'edit_profile.html', {'edit_user_form': edit_user_form, 'edit_profile_form': edit_profile_form})
