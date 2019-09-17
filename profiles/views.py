@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, reverse
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
-from profiles.forms import UserLoginForm, RegistrationForm, UserProfileForm
+from profiles.forms import UserLoginForm, RegistrationForm, EditUserForm, EditProfileForm
 
 # Create your views here.
 
@@ -89,9 +89,12 @@ def register_view(request):
 def edit_profile_view(request):
     
     if request.method == 'POST':
-        edit_form = UserProfileForm(request.POST)
+        edit_user_form = EditUserForm(request.POST)
+        edit_profile_form = EditProfileForm(request.POST)
 
     else:
-        edit_form = UserProfileForm()
+        edit_user_form = EditUserForm()
+        edit_profile_form = EditProfileForm()
+
     
-    return render(request, 'edit_profile.html', {'edit_form': edit_form})
+    return render(request, 'edit_profile.html', {'edit_user_form': edit_user_form, 'edit_profile_form': edit_profile_form})

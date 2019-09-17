@@ -12,7 +12,8 @@
 
     {% csrf_token %}
 
-    {{ edit_form | as_bootstrap }}
+    {{ edit_user_form | as_bootstrap }}
+    {{ edit_profile_form | as_bootstrap }}
 
     <button class="btn btn-primary" type='submit'>Update</button>
 

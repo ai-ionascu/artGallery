@@ -49,7 +49,12 @@ class RegistrationForm(UserCreationForm):
 
         return user    
 
-class UserProfileForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        exclude = ('profile_type',)
+class EditUserForm(forms.ModelForm):
+        class Meta:
+            model = User
+            fields = ('username', 'first_name', 'last_name')
+            
+class EditProfileForm(forms.ModelForm):
+        class Meta:
+            model = Profile
+            fields = ('phone', 'address_line1', 'address_line2', 'city', 'county', 'country', 'zip_code')
