@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import User
 from django.contrib.auth.forms import UserCreationForm
+from profiles.models import Profile
 
 # Create your forms here.
 
@@ -47,3 +48,8 @@ class RegistrationForm(UserCreationForm):
             user.save()
 
         return user    
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        exclude = ('profile_type',)

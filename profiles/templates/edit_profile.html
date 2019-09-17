@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% load bootstrap_tags %}
+
+{% block page_title %}User Profile Page{% endblock %}
+
+{% block page_heading %}User Profile{% endblock %}
+
+{% block page_content %}
+
+<form method = 'POST'>
+
+    {% csrf_token %}
+
+    {{ edit_form | as_bootstrap }}
+
+    <button class="btn btn-primary" type='submit'>Update</button>
+
+</form>
+
+{% endblock %}
