@@ -1,7 +1,15 @@
 from django.shortcuts import render, redirect, reverse
+from django.conf import settings
 from django.contrib import auth, messages
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from profiles.forms import UserLoginForm, RegistrationForm, EditUserForm, EditProfileForm
+from profiles.models import Profile
+from profiles.forms import UserLoginForm, RegistrationForm, EditUserForm, EditProfileForm, PaymentForm
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+import stripe
+
+stripe.api_key = settings.STRIPE_SECRET
 
 # Create your views here.
 
@@ -22,9 +30,12 @@ def logout_view(request):
 
 
 def login_view(request):
+
     # checks if the user exist
     # if it does exist, the user is authenticated
 
+    if request.user.is_authenticated():
+        return redirect(reverse('index'))
 
     if request.method == 'POST':
 
@@ -106,3 +117,9 @@ def edit_profile_view(request):
 
     
     return render(request, 'edit_profile.html', {'edit_user_form': edit_user_form, 'edit_profile_form': edit_profile_form})
+
+@receiver(post_save, sender=User)
+def create_user_and_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+    instance.profile.save()
