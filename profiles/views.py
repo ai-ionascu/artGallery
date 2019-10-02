@@ -68,17 +68,37 @@ def register_view(request):
         reg_form = RegistrationForm(request.POST)
 
         if reg_form.is_valid():
-            user = reg_form.save()
+            
+            try:
+                      
+                customer = stripe.Customer.create(
+                                            name ='{} {}'.format(reg_form.cleaned_data.get('first_name'),
+                                                                reg_form.cleaned_data.get('last_name')),
+                                            email=str(reg_form.cleaned_data.get('email')),
+                                            source=str(reg_form.cleaned_data.get('token')) # obtained with Stripe.js
+                                            )
 
-            user.profile.profile_type = reg_form.cleaned_data.get('profile_type')
-            user.profile.phone = reg_form.cleaned_data.get('phone')
-            user.profile.address_line1 = reg_form.cleaned_data.get('address_line1')
-            user.profile.address_line2 = reg_form.cleaned_data.get('address_line2')
-            user.profile.city = reg_form.cleaned_data.get('city')
-            user.profile.county = reg_form.cleaned_data.get('county')
-            user.profile.country = reg_form.cleaned_data.get('country')
-            user.profile.zip_code = reg_form.cleaned_data.get('zip_code')
-            user.save()
+                stripe.Subscription.create(
+                                            customer=customer.id,
+                                            items=[
+                                                        {
+                                                        'plan': 'M01',
+                                                        },
+                                                    ],
+                                                    )
+                user = reg_form.save() 
+                user.profile.profile_type = reg_form.cleaned_data.get('profile_type')
+                user.profile.phone = reg_form.cleaned_data.get('phone')
+                user.profile.address_line1 = reg_form.cleaned_data.get('address_line1')
+                user.profile.address_line2 = reg_form.cleaned_data.get('address_line2')
+                user.profile.city = reg_form.cleaned_data.get('city')
+                user.profile.county = reg_form.cleaned_data.get('county')
+                user.profile.country = reg_form.cleaned_data.get('country')
+                user.profile.zip_code = reg_form.cleaned_data.get('zip_code')
+                user.save()
+
+            except stripe.error.CardError:
+                messages.error(request, "Your card was declined!")
 
             user = auth.authenticate(username=request.POST['username'],
                                     password=request.POST['password1'])
@@ -95,7 +115,7 @@ def register_view(request):
     else:
         reg_form = RegistrationForm()
 
-    return render(request, 'register.html', {'reg_form': reg_form})
+    return render(request, 'register.html', {'reg_form': reg_form, 'publishable' : settings.STRIPE_PUBLISHABLE})
 
 def edit_profile_view(request):
     

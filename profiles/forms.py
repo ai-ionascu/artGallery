@@ -24,10 +24,11 @@ class RegistrationForm(UserCreationForm):
     county = forms.CharField(max_length=64, required=False)
     country = forms.CharField(max_length=64, required=False)
     zip_code = forms.CharField(max_length=8, required=False)
+    token = forms.CharField(widget=forms.HiddenInput(attrs={'id':'token'}))
 
     class Meta:
         model = User
-        fields = ('profile_type', 'username','first_name', 'last_name', 'email', 'phone', 'password1', 'password2')
+        fields = ('profile_type', 'username','first_name', 'last_name', 'email', 'phone', 'password1', 'password2', 'token')
 
     def clean_email(self):
         
@@ -58,3 +59,14 @@ class EditProfileForm(forms.ModelForm):
         class Meta:
             model = Profile
             fields = ('phone', 'address_line1', 'address_line2', 'city', 'county', 'country', 'zip_code')
+
+class PaymentForm(forms.Form):
+    
+    MONTH_CHOICES = [(i, i) for i in range(1, 12+1)]
+    YEAR_CHOICES = [(i, i) for i in range(2019, 2036)]
+    
+    card_number = forms.CharField(label='Credit card number', required=False, widget=forms.TextInput(attrs={'id':'card-number-element'}))
+    cvv = forms.CharField(label='Security code (CVV)', required=False)
+    expiry_month = forms.ChoiceField(label='Month', choices=MONTH_CHOICES, required=False)
+    expiry_year = forms.ChoiceField(label='Year', choices=YEAR_CHOICES, required=False)
+    token = forms.CharField(widget=forms.HiddenInput)

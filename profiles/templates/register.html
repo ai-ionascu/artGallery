@@ -1,28 +1,24 @@
 {% extends 'base.html' %}
 
+{% load staticfiles %}
+
 {% load bootstrap_tags %}
 
 {% block page_title %}Registration Page{% endblock %}
 
-{% block head %}
-<script type="text/javascript" src="https://js.stripe.com/v3/"></script>
-<script type="text/javascript">
-    //<![CDATA[
-        Stripe.publishableKey = '{{ publishable }}';
-    //]]>
-</script>
-<script type="text/javascript" src="{% static 'js/stripe.js' %}"></script>
-{% endblock %}
+
 
 {% block page_heading %}User Registration{% endblock %}
 
 {% block page_content %}
 
-<form method = 'POST'>
+<form method = 'POST' id='payment-form' action="{% url 'register' %}">
 
     {% csrf_token %}
 
     {{ reg_form | as_bootstrap }}
+
+    {% include 'payment_form.html' %}
 
     <button class="btn btn-primary" type='submit'>Register</button>
 
@@ -30,4 +26,14 @@
 
 <p>Already registered? You can proceed to <a href="{% url 'login' %}">Login</a> page</p>
 
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="https://js.stripe.com/v3/"></script>
+<script type="text/javascript">
+    //<![CDATA[
+        var stripe = Stripe('{{ publishable }}');
+    //]]>
+</script>
+<script type="text/javascript" src="{% static 'js/stripe.js' %}"></script>
 {% endblock %}
