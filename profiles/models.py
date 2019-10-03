@@ -21,6 +21,8 @@ class Profile(AddressMixin, models.Model):
     PROFILE_CHOICES = (('ARTIST', 'Artist'), ('CUSTOMER', 'Customer'))
     profile_type = models.CharField(max_length=24, choices=PROFILE_CHOICES, blank=False, default='')
     phone = models.CharField(max_length=24, null=False, blank=True, default='')
+    stripe_id = models.CharField(max_length=256, blank=True)
+    subscr_id = models.CharField(max_length=256, blank=True)
 
     def __str__(self):
         return self.user.username

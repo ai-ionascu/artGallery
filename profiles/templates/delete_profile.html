@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% load bootstrap_tags %}
+
+{% block page_title %}User Profile Page{% endblock %}
+
+{% block page_heading %}User Profile{% endblock %}
+
+{% block page_content %}
+
+<p>Dear {{ user.username }},</p>
+<p>We are sorry you are leaving us so soon. Are you sure you wish to permanently delete your account?</p>
+
+<form method='POST'>
+    {% csrf_token %}
+    <div class='d-none'>{{ form.username }}</div>
+    {{ form.first_name.as_hidden }}
+    {{ form.last_name.as_hidden }}
+    <button class='btn btn-danger' type='submit' value='Delete'>Delete</button>
+    <a href="{% url 'index' %}" class='btn btn-primary'>Cancel</a>
+</form>
+
+{% endblock %}

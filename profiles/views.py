@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.conf import settings
 from django.contrib import auth, messages
 from django.contrib.auth.models import User
@@ -8,6 +8,7 @@ from profiles.forms import UserLoginForm, RegistrationForm, EditUserForm, EditPr
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 import stripe
+import datetime
 
 stripe.api_key = settings.STRIPE_SECRET
 
@@ -78,7 +79,7 @@ def register_view(request):
                                             source=str(reg_form.cleaned_data.get('token')) # obtained with Stripe.js
                                             )
 
-                stripe.Subscription.create(
+                subscription = stripe.Subscription.create(
                                             customer=customer.id,
                                             items=[
                                                         {
@@ -95,6 +96,8 @@ def register_view(request):
                 user.profile.county = reg_form.cleaned_data.get('county')
                 user.profile.country = reg_form.cleaned_data.get('country')
                 user.profile.zip_code = reg_form.cleaned_data.get('zip_code')
+                user.profile.stripe_id = customer.id
+                user.profile.subscr_id = subscription.id
                 user.save()
 
             except stripe.error.CardError:
@@ -117,7 +120,7 @@ def register_view(request):
 
     return render(request, 'register.html', {'reg_form': reg_form, 'publishable' : settings.STRIPE_PUBLISHABLE})
 
-def edit_profile_view(request):
+def edit_profile_view(request,id=None):
     
     if request.method == 'POST':
         edit_user_form = EditUserForm(request.POST, instance=request.user)
@@ -143,3 +146,41 @@ def create_user_and_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
     instance.profile.save()
+
+@login_required
+def unsubscribe_view(request):
+    
+    try:
+        # customer = stripe.Customer.retrieve(request.user.profile.stripe_id)
+        subscription = stripe.Subscription.retrieve(request.user.profile.subscr_id)
+        end_date_ts = subscription.current_period_end
+        end_date = datetime.datetime.fromtimestamp(int(end_date_ts))
+        stripe.Subscription.modify(request.user.profile.subscr_id, cancel_at_period_end=True)
+        messages.success(request, 'You subscription has been successfully cancelled. Your account will be permanently deleted at {}'.format(end_date))
+
+    except Exception :
+
+        messages.error(request, "An error occured, we couldn't cancel your subscription.")
+    
+
+    return redirect(reverse('index'))
+
+@login_required
+def delete_user_view(request):
+
+    if request.method == 'POST':
+        form = EditUserForm(request.POST, instance=request.user)
+
+        if form.is_valid():
+            form.save()
+            del_user = User.objects.get(username=form.cleaned_data['username'])
+            if del_user is not None:
+                del_user.delete()
+                messages.success(request, "We have successfully deleted your account.")
+                return redirect(reverse('index'))
+        else:
+            messages.error(request, "We could not delete your account.")
+    else:
+        form = EditUserForm(instance=request.user)
+        
+    return render(request, 'delete_profile.html', {'form':form})

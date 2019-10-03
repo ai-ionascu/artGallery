@@ -14,7 +14,8 @@
 
     {{ edit_user_form | as_bootstrap }}
     {{ edit_profile_form | as_bootstrap }}
-
+    
+    <a href="{% url 'delete_profile' %}" class='btn btn-danger'>Delete Profile</a>
     <button class="btn btn-primary" type='submit'>Update</button>
 
 </form>
