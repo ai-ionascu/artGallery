@@ -12,28 +12,24 @@
 
 {% block page_content %}
 
-<form method = 'POST' id='payment-form' action="{% url 'register' %}">
+<p>Please select your desired profile type:</p>
 
-    {% csrf_token %}
+{% for x,y in types %}
 
-    {{ reg_form | as_bootstrap }}
+<div class="d-inline-block">
+    <form method="post">
 
-    {% include 'payment_form.html' %}
+        {% csrf_token %}
+        
+        <input type="hidden" name = 'profile_type' value='{{ x }}'>
+        <button type="submit">{{ y }}</button>
 
-    <button class="btn btn-primary" type='submit'>Register</button>
+    </form>
+</div>
+{% endfor %}
 
-</form>
+<br>
 
 <p>Already registered? You can proceed to <a href="{% url 'login' %}">Login</a> page</p>
 
-{% endblock %}
-
-{% block js %}
-<script type="text/javascript" src="https://js.stripe.com/v3/"></script>
-<script type="text/javascript">
-    //<![CDATA[
-        var stripe = Stripe('{{ publishable }}');
-    //]]>
-</script>
-<script type="text/javascript" src="{% static 'js/stripe.js' %}"></script>
 {% endblock %}

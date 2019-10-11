@@ -4,7 +4,7 @@ from django.contrib import auth, messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from profiles.models import Profile
-from profiles.forms import UserLoginForm, RegistrationForm, EditUserForm, EditProfileForm, PaymentForm
+from profiles.forms import UserLoginForm, RegistrationForm, EditUserForm, EditProfileForm
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 import stripe
@@ -60,48 +60,70 @@ def login_view(request):
 
     return render(request, 'login.html', {'login_form': login_form})
 
-def register_view(request):
+def registration_view(request):
 
     if request.user.is_authenticated():
         return redirect(reverse('index'))
+    
+    types = Profile._meta.get_field('profile_type').choices
+
+    if request.method == 'POST':
+        request.session['profile_type'] = request.POST['profile_type']
+        return redirect(reverse('new_profile'))
+    
+    return render(request, 'register.html', { 'types':types })
+
+def new_profile_view(request):
+
+    if request.user.is_authenticated():
+        return redirect(reverse('index'))
+    
+    profile_type = request.session.get('profile_type')
 
     if request.method == 'POST':
         reg_form = RegistrationForm(request.POST)
 
         if reg_form.is_valid():
-            
-            try:
+
+            if profile_type == 'ARTIST':
+
+                try:
                       
-                customer = stripe.Customer.create(
-                                            name ='{} {}'.format(reg_form.cleaned_data.get('first_name'),
-                                                                reg_form.cleaned_data.get('last_name')),
-                                            email=str(reg_form.cleaned_data.get('email')),
-                                            source=str(reg_form.cleaned_data.get('token')) # obtained with Stripe.js
-                                            )
+                    customer = stripe.Customer.create(
+                                                name ='{} {}'.format(reg_form.cleaned_data.get('first_name'),
+                                                                    reg_form.cleaned_data.get('last_name')),
+                                                email=str(reg_form.cleaned_data.get('email')),
+                                                source=str(reg_form.cleaned_data.get('token')) # obtained with Stripe.js
+                                                )
 
-                subscription = stripe.Subscription.create(
-                                            customer=customer.id,
-                                            items=[
-                                                        {
-                                                        'plan': 'M01',
-                                                        },
-                                                    ],
-                                                    )
-                user = reg_form.save() 
-                user.profile.profile_type = reg_form.cleaned_data.get('profile_type')
-                user.profile.phone = reg_form.cleaned_data.get('phone')
-                user.profile.address_line1 = reg_form.cleaned_data.get('address_line1')
-                user.profile.address_line2 = reg_form.cleaned_data.get('address_line2')
-                user.profile.city = reg_form.cleaned_data.get('city')
-                user.profile.county = reg_form.cleaned_data.get('county')
-                user.profile.country = reg_form.cleaned_data.get('country')
-                user.profile.zip_code = reg_form.cleaned_data.get('zip_code')
-                user.profile.stripe_id = customer.id
-                user.profile.subscr_id = subscription.id
-                user.save()
+                    subscription = stripe.Subscription.create(
+                                                customer=customer.id,
+                                                items=[
+                                                            {
+                                                            'plan': 'M01',
+                                                            },
+                                                        ],
+                                                        )
+                    user = reg_form.save()
+                    user.profile.stripe_id = customer.id
+                    user.profile.subscr_id = subscription.id
+                    
 
-            except stripe.error.CardError:
-                messages.error(request, "Your card was declined!")
+                except stripe.error.CardError:
+                    messages.error(request, "Your card was declined!")
+
+            else:
+                user = reg_form.save()
+                
+            user.profile.profile_type = request.POST.get('profile_type')
+            user.profile.phone = reg_form.cleaned_data.get('phone')
+            user.profile.address_line1 = reg_form.cleaned_data.get('address_line1')
+            user.profile.address_line2 = reg_form.cleaned_data.get('address_line2')
+            user.profile.city = reg_form.cleaned_data.get('city')
+            user.profile.county = reg_form.cleaned_data.get('county')
+            user.profile.country = reg_form.cleaned_data.get('country')
+            user.profile.zip_code = reg_form.cleaned_data.get('zip_code')
+            user.save()
 
             user = auth.authenticate(username=request.POST['username'],
                                     password=request.POST['password1'])
@@ -118,7 +140,7 @@ def register_view(request):
     else:
         reg_form = RegistrationForm()
 
-    return render(request, 'register.html', {'reg_form': reg_form, 'publishable' : settings.STRIPE_PUBLISHABLE})
+    return render(request, 'new_profile.html', {'reg_form': reg_form, 'profile_type':profile_type, 'publishable': settings.STRIPE_PUBLISHABLE})
 
 def edit_profile_view(request,id=None):
     
