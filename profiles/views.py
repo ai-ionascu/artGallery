@@ -100,7 +100,7 @@ def new_profile_view(request):
                                                 customer=customer.id,
                                                 items=[
                                                             {
-                                                            'plan': 'M01',
+                                                            'plan': request.POST['plan'],
                                                             },
                                                         ],
                                                         )
