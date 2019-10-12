@@ -18,7 +18,7 @@
                     <li class="nav-item px-3"><a href="{% url 'login' %}">Login</a></li>
                     <li class="nav-item px-3"><a href="{% url 'register' %}">Register</a></li>
                 {% endif %}
-                {% if user.profile.profile_type == 'ARTIST' %}
+                {% if user.is_authenticated and user.profile.profile_type == 'ARTIST' %}
                     <li class="nav-item px-3"><a href="{% url 'unsubscribe' %}">Cancel Subscription</a></li>
                 {% endif %}
             </ul>
