@@ -13,9 +13,7 @@
 
 <form method='POST'>
     {% csrf_token %}
-    <div class='d-none'>{{ form.username }}</div>
-    {{ form.first_name.as_hidden }}
-    {{ form.last_name.as_hidden }}
+    <div class='d-none'>{{ form }}</div>
     <button class='btn btn-danger' type='submit' value='Delete'>Delete</button>
     <a href="{% url 'index' %}" class='btn btn-primary'>Cancel</a>
 </form>

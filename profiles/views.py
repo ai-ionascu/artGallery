@@ -189,17 +189,21 @@ def unsubscribe_view(request):
 
 @login_required
 def delete_user_view(request):
-
     if request.method == 'POST':
         form = EditUserForm(request.POST, instance=request.user)
-
         if form.is_valid():
             form.save()
             del_user = User.objects.get(username=form.cleaned_data['username'])
+            if del_user.profile.profile_type == 'ARTIST':
+                stripe.Subscription.retrieve(request.user.profile.subscr_id)
+                stripe.Subscription.delete(request.user.profile.subscr_id)
+                messages.success(request, 'You subscription has been cancelled.')
             if del_user is not None:
                 del_user.delete()
                 messages.success(request, "We have successfully deleted your account.")
                 return redirect(reverse('index'))
+                
+
         else:
             messages.error(request, "We could not delete your account.")
     else:
