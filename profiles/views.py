@@ -49,6 +49,17 @@ def login_view(request):
             if user:
 
                 auth.login(user=user,request=request)
+                subscription = stripe.Subscription.retrieve(request.user.profile.subscr_id)
+                if user.profile.profile_type == 'ARTIST':
+                    if subscription.cancel_at_period_end == True:
+                        if subscription.current_period_end < datetime.datetime.now().timestamp():
+                            User.objects.get(username=request.POST['username']).delete()
+                            messages.error(request,'Your subscription has been cancelled. Account permanently deleted, please proceed to registration page.')
+                            return redirect(reverse('index'))
+                        else:
+                            delta = datetime.datetime.fromtimestamp(int(subscription.current_period_end))-datetime.datetime.now()
+                            if delta.days < 30:
+                                messages.error(request,'Your subscription will be ended in {} days.'.format(delta.days))
                 messages.success(request,'You have been successfully logged in.')
                 return redirect(reverse('index'))
 
@@ -183,6 +194,21 @@ def unsubscribe_view(request):
     except Exception :
 
         messages.error(request, "An error occured, we couldn't cancel your subscription.")
+    
+
+    return redirect(reverse('index'))
+
+@login_required
+def reactivate_subscription_view(request):
+
+    try:
+        stripe.Subscription.retrieve(request.user.profile.subscr_id)
+        stripe.Subscription.modify(request.user.profile.subscr_id, cancel_at_period_end=False)
+        messages.success(request, 'You subscription has been successfully reactivated')
+
+    except Exception :
+
+        messages.error(request, "An error occured, we couldn't reactivate your subscription.")
     
 
     return redirect(reverse('index'))

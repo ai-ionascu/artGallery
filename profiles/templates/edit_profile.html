@@ -12,6 +12,8 @@
 
     {% csrf_token %}
 
+    <p>Your email address: {{ user.email }}</p>
+
     {{ edit_user_form | as_bootstrap }}
     {{ edit_profile_form | as_bootstrap }}
     

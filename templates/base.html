@@ -11,16 +11,21 @@
     <body>
         <nav class='navbar navbar-light bg-light'>
             <ul class='nav'>
+
                 {% if user.is_authenticated %}
-                    <li class="nav-item px-3"><a href="{% url 'edit_profile' %}">Profile</a></li>
-                    <li class="nav-item px-3"><a href="{% url 'logout' %}">Logout</a></li>
+                  <li class="nav-item px-3"><a href="{% url 'edit_profile' %}">Profile</a></li>
+                  <li class="nav-item px-3"><a href="{% url 'logout' %}">Logout</a></li>             
                 {% else %}
-                    <li class="nav-item px-3"><a href="{% url 'login' %}">Login</a></li>
-                    <li class="nav-item px-3"><a href="{% url 'register' %}">Register</a></li>
+                  <li class="nav-item px-3"><a href="{% url 'login' %}">Login</a></li>
+                  <li class="nav-item px-3"><a href="{% url 'register' %}">Register</a></li>
                 {% endif %}
-                {% if user.is_authenticated and user.profile.profile_type == 'ARTIST' %}
+
+                {% if subscription == False %}
                     <li class="nav-item px-3"><a href="{% url 'unsubscribe' %}">Cancel Subscription</a></li>
+                {% else %}
+                <li class="nav-item px-3"><a href="{% url 'resubscribe' %}">Reactivate Subscription</a></li>
                 {% endif %}
+
             </ul>
         </nav>
         
