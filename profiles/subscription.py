@@ -6,5 +6,8 @@ def subscription_to_context(request):
 
     if request.user.is_authenticated:
         subscription = stripe.Subscription.retrieve(request.user.profile.subscr_id)
+        context = {'subscription' : subscription.cancel_at_period_end}
+    else:
+        context = {}
 
-    return {'subscription' : subscription.cancel_at_period_end}
+    return context
