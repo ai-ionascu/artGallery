@@ -19,7 +19,7 @@ class Profile(AddressMixin, models.Model):
     
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     PROFILE_CHOICES = (('ARTIST', 'Artist'), ('CUSTOMER', 'Customer'))
-    profile_type = models.CharField(max_length=24, choices=PROFILE_CHOICES, blank=False, default='')
+    profile_type = models.CharField(max_length=24, choices=PROFILE_CHOICES, blank=True, default='')
     phone = models.CharField(max_length=24, null=False, blank=True, default='')
     stripe_id = models.CharField(max_length=256, blank=True)
     subscr_id = models.CharField(max_length=256, blank=True)

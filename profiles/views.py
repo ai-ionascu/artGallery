@@ -49,8 +49,8 @@ def login_view(request):
             if user:
 
                 auth.login(user=user,request=request)
-                subscription = stripe.Subscription.retrieve(request.user.profile.subscr_id)
                 if user.profile.profile_type == 'ARTIST':
+                    subscription = stripe.Subscription.retrieve(request.user.profile.subscr_id)
                     if subscription.cancel_at_period_end == True:
                         if subscription.current_period_end < datetime.datetime.now().timestamp():
                             User.objects.get(username=request.POST['username']).delete()
@@ -60,6 +60,7 @@ def login_view(request):
                             delta = datetime.datetime.fromtimestamp(int(subscription.current_period_end))-datetime.datetime.now()
                             if delta.days < 30:
                                 messages.error(request,'Your subscription will be ended in {} days.'.format(delta.days))
+
                 messages.success(request,'You have been successfully logged in.')
                 return redirect(reverse('index'))
 
