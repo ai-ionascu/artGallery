@@ -20,24 +20,6 @@
         //]]>
     </script>
 
-    <script type="text/javascript">
-        $(document).ready(function(){
-
-            $('input:radio[name="profile_type"]').click(function(){
-                if($(this).val() == 'ARTIST'){
-                    $("#payment-info").show('slow');
-                    $(this).attr('status', 'selected');
-                    $('#id_profile_type_2').removeAttr('status', 'selected');
-                }else{
-                    $("#payment-info").hide('slow');
-                    $(this).attr('status', 'selected');
-                    $('#id_profile_type_1').removeAttr('status', 'selected');
-                    
-                }
-            });
-        });
-    </script>
-
     <script type="text/javascript" src="{% static 'js/stripe.js' %}"></script>
 
 {% endif %}
