@@ -19,11 +19,13 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from home.views import index_view
 from profiles import urls as urls_profiles
+from paintings import urls as urls_paintings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', index_view, name='index'),
     url(r'^profiles/', include(urls_profiles)),
+    url(r'^paintings/', include(urls_paintings)),
 ]
 
 if settings.DEBUG:

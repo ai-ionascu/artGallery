@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% load bootstrap_tags %}
+
+{% block page_title %}Gallery Page{% endblock %}
+
+{% block page_heading %}Gallery{% endblock %}
+
+{% block page_content %}
+<br>
+{% for painting in paintings %}
+    {% for subject in subjects %}
+    <br>
+        <div class='m-auto w-50'>
+            <h3><a href="#">{{ painting.name }}</a></h3>
+            <img src="{{ painting.image.url }}" alt="{{ painting.name }}" max-width="200" height="200"/>
+            <p>Description: {{ painting.description }}</p>
+            <p>Year: {{ painting.year }}</p>
+            <p>Subject: {{ subject.subject }}</p>
+            <p>Trend: {{ painting.trend }}</p>
+            <p>Media: {{ painting.media }}</p>
+            <p>Size: {{ painting.size }}</p>
+            <p>Price: {{ painting.price }}</p>
+            {% if painting.availability %}
+                <p>Available</p>
+            {% else %}
+                <p>Out of Stock</p>
+            {% endif %}
+        </div>
+    <br>
+    {% endfor %}
+{% endfor %}
+
+{% endblock %}
