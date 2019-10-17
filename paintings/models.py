@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 class Artist(models.Model):
 
     name = models.CharField(max_length=128, blank=True, default='')
+    bio = models.TextField(default='')
     born_year = models.IntegerField()
     deceased_year = models.IntegerField()
 
