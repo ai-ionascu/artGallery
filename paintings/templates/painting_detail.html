@@ -5,16 +5,29 @@
 {% block page_title %}Gallery Page{% endblock %}
 
 {% block page_heading %}
-    <div class="container m-auto">{{ painting.name }}</div>
+<br>
+    <div class="container m-auto">
+        <h3>{{ painting.name }}</h3>
+        <h5>{{ painting.artist }}</h5>
+    </div>
 {% endblock %}
 
 {% block page_content %}
 <br>
-    <div class='m-auto container'>
-        <img src="{{ painting.image.url }}" alt="{{ painting.name }}" max-width="200" height="500"/>
+    <div class='mx-auto mb-4 container'>
+        <div class="mb-4">
+            <img src="{{ painting.image.url }}" alt="{{ painting.name }}" max-width="200" height="500"/>
+        </div>
         <p>Description: {{ painting.description }}</p>
         <p>Year: {{ painting.year }}</p>
-        <p>Subject: {{ subject.subject }}</p>
+        <div class='d-flex'>
+                <p>Subject:</p>
+                <ul>
+                {% for value in painting.get_subject_values %}
+                    <li> {{ value }} </li>   
+                {% endfor %}
+                </ul>
+            </div>
         <p>Trend: {{ painting.trend }}</p>
         <p>Media: {{ painting.media }}</p>
         <p>Size: {{ painting.size }}</p>

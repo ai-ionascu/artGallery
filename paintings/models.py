@@ -48,5 +48,14 @@ class Painting(models.Model):
     size = models.CharField(max_length=24, choices=SIZE_CHOICES, blank=True, default='')
     price = models.DecimalField(max_digits=24, decimal_places=2)
     availability = models.BooleanField()
+
     def __str__(self):
         return self.name
+
+    def get_subject_values(self):
+        result = []
+
+        for subj in self.subject.all():
+            result.append(subj.subject)
+
+        return result

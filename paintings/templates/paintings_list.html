@@ -9,17 +9,12 @@
 {% block page_content %}
 <br>
 {% for painting in paintings %}
-    {% for subject in subjects %}
+
     <br>
         <div class='m-auto w-50'>
-            <h3><a href="{{ painting.id }}">{{ painting.name }}</a></h3>
-            <img src="{{ painting.image.url }}" alt="{{ painting.name }}" max-width="200" height="200"/>
-            <p>Description: {{ painting.description }}</p>
-            <p>Year: {{ painting.year }}</p>
-            <p>Subject: {{ subject.subject }}</p>
-            <p>Trend: {{ painting.trend }}</p>
-            <p>Media: {{ painting.media }}</p>
-            <p>Size: {{ painting.size }}</p>
+            <h3>{{ painting.artist }}</h3>
+            <h5><a href="{{ painting.id }}">{{ painting.name }}</a></h5>
+            <a href="{{ painting.id }}"><img src="{{ painting.image.url }}" alt="{{ painting.name }}" max-width="200" height="200"/></a>
             <p>Price: {{ painting.price }}</p>
             {% if painting.availability %}
                 <p>Available</p>
@@ -28,7 +23,7 @@
             {% endif %}
         </div>
     <br>
-    {% endfor %}
+  
 {% endfor %}
 
 {% endblock %}
