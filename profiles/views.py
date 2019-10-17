@@ -148,7 +148,7 @@ def new_profile_view(request):
 
     return render(request, 'new_profile.html', {'reg_form': reg_form, 'profile_type':profile_type, 'publishable': settings.STRIPE_PUBLISHABLE})
 
-def edit_profile_view(request,id=None):
+def edit_profile_view(request):
     
     if request.method == 'POST':
         edit_user_form = EditUserForm(request.POST, instance=request.user)
