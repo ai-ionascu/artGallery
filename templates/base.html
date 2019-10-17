@@ -50,19 +50,14 @@
               
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Art Movement
+                  Art Trend
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="#">Expressionism</a>
-                  <a class="dropdown-item" href="#">Fauvism</a>
-                  <a class="dropdown-item" href="#">Cubism</a>
-                  <a class="dropdown-item" href="#">Dadaism</a>
-                  <a class="dropdown-item" href="#">Surrealism</a>
-                  <a class="dropdown-item" href="#">Abstract</a>
-                  <a class="dropdown-item" href="#">Pop Art</a>
-                  <a class="dropdown-item" href="#">Post Modernism</a>
+                  {% for t in trend %}
+                  <a class="dropdown-item" href="#">{{ t }}</a>
+                  {% endfor %}
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">Something else here</a>
+                  <a class="dropdown-item" href="#">All Trends</a>
                 </div>
               </li>
             
@@ -72,16 +67,11 @@
                   Subject
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="#">Abstract</a>
-                  <a class="dropdown-item" href="#">Portrait</a>
-                  <a class="dropdown-item" href="#">Still Life</a>
-                  <a class="dropdown-item" href="#">Village</a>
-                  <a class="dropdown-item" href="#">War Scene</a>
-                  <a class="dropdown-item" href="#">History</a>
-                  <a class="dropdown-item" href="#">Floral</a>
-                  <a class="dropdown-item" href="#">Nude</a>
+                  {% for s in subject %}
+                  <a class="dropdown-item" href="#">{{ s }}</a>
+                  {% endfor %}
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">Something else here</a>
+                  <a class="dropdown-item" href="#">All Subjects</a>
                 </div>
             </li>
             
@@ -90,16 +80,11 @@
                   Medium
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="#">Acrylic</a>
-                  <a class="dropdown-item" href="#">Oil</a>
-                  <a class="dropdown-item" href="#">Watercolor</a>
-                  <a class="dropdown-item" href="#">Tempera</a>
-                  <a class="dropdown-item" href="#">Pastel</a>
-                  <a class="dropdown-item" href="#">Pen</a>
-                  <a class="dropdown-item" href="#">Graffiti</a>
-                  <a class="dropdown-item" href="#">Mixed Media</a>
+                  {% for m in media %}
+                  <a class="dropdown-item" href="#">{{ m }}</a>
+                  {% endfor %}
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">Something else here</a>
+                  <a class="dropdown-item" href="#">All Media</a>
                 </div>
               </li>
               
@@ -108,9 +93,9 @@
                   Size
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="#">Small</a>
-                  <a class="dropdown-item" href="#">Medium</a>
-                  <a class="dropdown-item" href="#">Large</a>
+                  {% for x,y in size %}
+                  <a class="dropdown-item" href="#">{{ y }}</a>
+                  {% endfor %}
                 </div>
               </li>
               
