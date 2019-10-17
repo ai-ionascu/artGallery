@@ -14,39 +14,38 @@ class Artist(models.Model):
 
 class Subject(models.Model):
 
-    name = models.CharField(max_length=128, blank=True, default='')
+    subject = models.CharField(max_length=128, blank=True, default='')
 
     def __str__(self):
-        return self.name
+        return self.subject
 
 class Trend(models.Model):
 
-    name = models.CharField(max_length=128, blank=True, default='')
+    trend = models.CharField(max_length=128, blank=True, default='')
 
     def __str__(self):
-        return self.name
+        return self.trend
 
 class Media(models.Model):
 
-    name = models.CharField(max_length=128, blank=True, default='')
-
+    media = models.CharField(max_length=128, blank=True, default='')
+    
     def __str__(self):
-        return self.name
+        return self.media
 
 class Painting(models.Model):
-    name = models.CharField(max_length=128, default='')
+    name = models.CharField(max_length=128, default='') 
     artist = models.ForeignKey(Artist, blank=True, null=True)
     artist_user = models.ForeignKey(User, blank=True, null=True)
     image = models.ImageField(upload_to='images')
     description = models.TextField()
-    subject = models.ForeignKey(Subject, blank=True, null=True)
-    year = models.IntegerField()
+    subject = models.ManyToManyField(Subject, blank=True)
     trend = models.ForeignKey(Trend, blank=True, null=True)
     media = models.ForeignKey(Media, blank=True, null=True)
+    year = models.IntegerField()
     SIZE_CHOICES = (('SMALL', 'Small'), ('SMALL', 'Medium'), ('SMALL', 'Large'))
     size = models.CharField(max_length=24, choices=SIZE_CHOICES, blank=True, default='')
     price = models.DecimalField(max_digits=24, decimal_places=2)
     availability = models.BooleanField()
-    
     def __str__(self):
         return self.name
