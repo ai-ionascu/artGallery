@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% load bootstrap_tags %}
+
+{% block page_title %}Gallery Page{% endblock %}
+
+{% block page_heading %}
+    <div class="container m-auto">{{ painting.name }}</div>
+{% endblock %}
+
+{% block page_content %}
+<br>
+    <div class='m-auto container'>
+        <img src="{{ painting.image.url }}" alt="{{ painting.name }}" max-width="200" height="500"/>
+        <p>Description: {{ painting.description }}</p>
+        <p>Year: {{ painting.year }}</p>
+        <p>Subject: {{ subject.subject }}</p>
+        <p>Trend: {{ painting.trend }}</p>
+        <p>Media: {{ painting.media }}</p>
+        <p>Size: {{ painting.size }}</p>
+        <p>Price: {{ painting.price }}</p>
+        {% if painting.availability %}
+            <p>Available</p>
+        {% else %}
+            <p>Out of Stock</p>
+        {% endif %}
+        <br>
+        <a type='button' href="{% url 'paintings' %}">Return to Gallery</a>
+    </div>
+
+{% endblock %}

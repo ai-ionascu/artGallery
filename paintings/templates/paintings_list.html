@@ -12,7 +12,7 @@
     {% for subject in subjects %}
     <br>
         <div class='m-auto w-50'>
-            <h3><a href="#">{{ painting.name }}</a></h3>
+            <h3><a href="{{ painting.id }}">{{ painting.name }}</a></h3>
             <img src="{{ painting.image.url }}" alt="{{ painting.name }}" max-width="200" height="200"/>
             <p>Description: {{ painting.description }}</p>
             <p>Year: {{ painting.year }}</p>
