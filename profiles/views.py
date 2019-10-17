@@ -14,12 +14,6 @@ stripe.api_key = settings.STRIPE_SECRET
 
 # Create your views here.
 
-def index_view(request):
-    # returns the gallery homepage
-    
-    return render(request, 'index.html')
-
-
 @login_required
 def logout_view(request):
     # logs the user out
