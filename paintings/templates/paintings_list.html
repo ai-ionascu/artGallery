@@ -14,7 +14,11 @@
         <div class='m-auto w-50'>
             <h3>{{ painting.artist }}</h3>
             <h5><a href="{{ painting.id }}">{{ painting.name }}</a></h5>
-            <a href="{{ painting.id }}"><img src="{{ painting.image.url }}" alt="{{ painting.name }}" max-width="200" height="200"/></a>
+            <a href="{{ painting.id }}">
+                {% if painting.image %}
+                <img src="{{ painting.image.url }}" alt="{{ painting.name }}" max-width="200" height="200"/>
+                {% endif %}
+            </a>
             <p>Price: {{ painting.price }}</p>
             {% if painting.availability %}
                 <p>Available</p>

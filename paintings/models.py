@@ -5,47 +5,47 @@ from django.contrib.auth.models import User
 
 class Artist(models.Model):
 
-    name = models.CharField(max_length=128, blank=True, default='')
-    bio = models.TextField(default='')
-    born_year = models.IntegerField()
-    deceased_year = models.IntegerField()
+    name = models.CharField(max_length=128, blank=False, null=False)
+    bio = models.TextField(blank=True, null=True)
+    born_year = models.IntegerField(blank=True, null=True, default=False)
+    deceased_year = models.IntegerField(blank=True, null=True, default=False)
 
     def __str__(self):
         return self.name
 
 class Subject(models.Model):
 
-    subject = models.CharField(max_length=128, blank=True, default='')
+    subject = models.CharField(max_length=128, default='')
 
     def __str__(self):
         return self.subject
 
 class Trend(models.Model):
 
-    trend = models.CharField(max_length=128, blank=True, default='')
+    trend = models.CharField(max_length=128, default='')
 
     def __str__(self):
         return self.trend
 
 class Media(models.Model):
 
-    media = models.CharField(max_length=128, blank=True, default='')
+    media = models.CharField(max_length=128, default='')
     
     def __str__(self):
         return self.media
 
 class Painting(models.Model):
     name = models.CharField(max_length=128, default='') 
-    artist = models.ForeignKey(Artist, blank=True, null=True)
+    artist = models.ForeignKey(Artist)
     artist_user = models.ForeignKey(User, blank=True, null=True)
     image = models.ImageField(upload_to='images')
     description = models.TextField()
-    subject = models.ManyToManyField(Subject, blank=True)
-    trend = models.ForeignKey(Trend, blank=True, null=True)
-    media = models.ForeignKey(Media, blank=True, null=True)
+    subject = models.ManyToManyField(Subject) 
+    trend = models.ForeignKey(Trend)
+    media = models.ForeignKey(Media)
     year = models.IntegerField()
-    SIZE_CHOICES = (('SMALL', 'Small'), ('SMALL', 'Medium'), ('SMALL', 'Large'))
-    size = models.CharField(max_length=24, choices=SIZE_CHOICES, blank=True, default='')
+    SIZE_CHOICES = (('', '---------'), ('SMALL', 'Small'), ('SMALL', 'Medium'), ('SMALL', 'Large'))
+    size = models.CharField(max_length=24, choices=SIZE_CHOICES, default='')
     price = models.DecimalField(max_digits=24, decimal_places=2)
     availability = models.BooleanField()
 

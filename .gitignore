@@ -6,3 +6,4 @@
 .gal/
 *.code-workspace
 .vscode/
+*copy*

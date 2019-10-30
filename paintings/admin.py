@@ -14,7 +14,9 @@ class PaintingAdmin(admin.ModelAdmin):
     inlines = [SubjectInline]
     
     def image_tag(self, obj):
-        return format_html('<img src="{}" alt="{}" max-width="200" height="100"/>'.format(obj.image.url, obj.name))
+        
+        if obj.image:
+            return format_html('<img src="{}" alt="{}" max-width="200" height="100"/>'.format(obj.image.url, obj.name))
 
     image_tag.short_description = 'Image Preview'
 

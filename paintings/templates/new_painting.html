@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% load bootstrap_tags %}
+
+{% block page_title %}New Painting Page{% endblock %}
+
+{% block page_heading %}New Painting{% endblock %}
+
+{% block page_content %}
+<div class="container">
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {{ painting_form.non_field_errors }}
+
+    {% for hidden_field in painting_form.hidden_fields %}
+        {{ hidden_field.errors }}
+        {{ hidden_field }}
+    {% endfor %}
+
+  <table class="row">
+    {% for field in painting_form.visible_fields %}
+      <tr>
+        <th>{{ field.label_tag }}</th>
+        <td>
+          {{ field.errors }}
+          {{ field }}
+          {{ field.help_text }}
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+
+  <button type="submit">Save</button>
+
+</form>
+<br>
+</div>
+{% endblock %}
