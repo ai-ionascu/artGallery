@@ -54,10 +54,10 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   {% for t in trend %}
-                  <a class="dropdown-item" href="#">{{ t }}</a>
+                  <a class="dropdown-item" href="{% url 'paintings' %}filter/trend/{{ t.id }}">{{ t }}</a>
                   {% endfor %}
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">All Trends</a>
+                  <a class="dropdown-item" href="{% url 'paintings' %}">All Trends</a>
                 </div>
               </li>
             
@@ -68,10 +68,10 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   {% for s in subject %}
-                  <a class="dropdown-item" href="#">{{ s }}</a>
+                  <a class="dropdown-item" href="{% url 'paintings' %}filter/subject/{{ s.id }}">{{ s }}</a>
                   {% endfor %}
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">All Subjects</a>
+                  <a class="dropdown-item" href="{% url 'paintings' %}">All Subjects</a>
                 </div>
             </li>
             
@@ -81,10 +81,10 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   {% for m in media %}
-                  <a class="dropdown-item" href="#">{{ m }}</a>
+                  <a class="dropdown-item" href="{% url 'paintings' %}filter/media/{{ m.id }}">{{ m }}</a>
                   {% endfor %}
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="#">All Media</a>
+                  <a class="dropdown-item" href="{% url 'paintings' %}">All Media</a>
                 </div>
               </li>
               
@@ -94,8 +94,12 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   {% for x,y in size %}
-                  <a class="dropdown-item" href="#">{{ y }}</a>
+                    {% if x != '' %}
+                      <a class="dropdown-item" href="{% url 'paintings' %}filter/size/{{ y }}">{{ y }}</a>
+                    {% endif %}
                   {% endfor %}
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="{% url 'paintings' %}">All Sizes</a>
                 </div>
               </li>
               

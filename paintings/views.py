@@ -6,8 +6,17 @@ from .forms import NewPainting
 
 # Create your views here.
 
-def list_paintings_view(request):
-    paintings_list = Painting.objects.all()
+def list_paintings_view(request, item=None, id=None, string=''):
+    if item and id and not string:
+        paintings_list = Painting.objects.filter(**{item: id})
+        if paintings_list.count() is 0:
+            messages.error(request, "Our gallery doesn't have any item of the selected type.")
+    elif item and not id and string:
+        paintings_list = Painting.objects.filter(**{item: string.upper()})
+        if paintings_list.count() is 0:
+            messages.error(request, "Our apologies, we don't have items in this size.")
+    else:        
+        paintings_list = Painting.objects.all()
     return render(request,  'paintings_list.html', {'paintings': paintings_list})
 
 def detail_paintings_view(request, id=None):

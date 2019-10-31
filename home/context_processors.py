@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 import stripe
+from django.db.models import Count
 from paintings.models import Subject, Trend, Media, Painting
 
 def subscription_to_context(request):
@@ -15,8 +16,7 @@ def subscription_to_context(request):
 
 def navbar(request):
     size = Painting._meta.get_field('size').choices
-    print(size)
-    return {'subject': Subject.objects.order_by("-id")[:5], 
-            'trend': Trend.objects.order_by("-id")[:5],
-            'media': Media.objects.order_by("-id")[:5],
+    return {'subject': Subject.objects.annotate(counter=Count('painting__subject')).order_by('-counter')[:5], 
+            'trend': Trend.objects.annotate(counter=Count('painting__trend')).order_by('-counter')[:5],
+            'media': Media.objects.annotate(counter=Count('painting__media')).order_by('-counter')[:5],
             'size':size}
