@@ -36,13 +36,13 @@ class Media(models.Model):
 
 class Painting(models.Model):
     name = models.CharField(max_length=128, default='') 
-    artist = models.ForeignKey(Artist)
-    artist_user = models.ForeignKey(User, blank=True, null=True)
+    artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
+    artist_user = models.ForeignKey(User)
     image = models.ImageField(upload_to='images')
     description = models.TextField()
     subject = models.ManyToManyField(Subject) 
-    trend = models.ForeignKey(Trend)
-    media = models.ForeignKey(Media)
+    trend = models.ForeignKey(Trend, on_delete=models.CASCADE)
+    media = models.ForeignKey(Media, on_delete=models.CASCADE)
     year = models.IntegerField()
     SIZE_CHOICES = (('', '---------'), ('SMALL', 'Small'), ('SMALL', 'Medium'), ('SMALL', 'Large'))
     size = models.CharField(max_length=24, choices=SIZE_CHOICES, default='')

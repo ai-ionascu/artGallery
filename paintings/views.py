@@ -48,7 +48,7 @@ def edit_painting_view(request, id):
     painting = get_object_or_404(Painting, id=id)
     
     if request.method == 'POST':
-        if request.user.profile.profile_type == 'ARTIST':
+        if request.user.profile.profile_type == 'ARTIST' and request.user == painting.artist_user:
             edit_painting_form = EditPainting(request.POST, request.FILES, instance=painting)
             if edit_painting_form.is_valid():
                 edit_painting_form.save()
@@ -56,8 +56,7 @@ def edit_painting_view(request, id):
             else:
                 messages.error(request,"We couldn't upload your painting.")
         else:
-            messages.error(request,"Don't try to cheat, please register as an artist.")
-            return redirect(reverse('register'))
+            messages.error(request,"You are not allowed to alter this item.")
             
         return redirect(reverse('painting_detail', kwargs={'id': painting.id}))
 
