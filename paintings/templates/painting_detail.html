@@ -39,6 +39,7 @@
         {% endif %}
         <br>
         <a type='button' href="{% url 'paintings' %}">Return to Gallery</a>
+        <a type='button' href="{% url 'painting_edit' id=painting.id %}">Painting Details Update</a>
     </div>
 
 {% endblock %}

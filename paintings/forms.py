@@ -93,3 +93,43 @@ class NewPainting(forms.ModelForm):
         model = Painting
         fields = ('name',  'image', 'description',
                  'year', 'size', 'price', 'availability')
+
+class EditPainting(forms.ModelForm):
+
+    artist = forms.CharField(required=True)
+    trend = forms.CharField(required=True)
+    media = forms.CharField(required=True)
+    new_subject = forms.CharField(required=False)
+
+    class Meta:
+        model = Painting
+        fields = ('name', 'image', 'description', 'year',
+                'subject', 'size', 'availability')
+
+    def __init__(self, *args, **kwargs):
+        _items_list = kwargs.pop('data_list', None)
+        super().__init__(*args, **kwargs)
+
+        self.fields['artist'].widget = SelectInputWidget(data_list=Artist.objects.all(), name='artist')
+        self.fields['trend'].widget = SelectInputWidget(data_list=Trend.objects.all(), name='trend')
+        self.fields['media'].widget = SelectInputWidget(data_list=Media.objects.all(), name='media')
+        print(self.fields['image'].initial)
+        print(self.fields['image'])
+    def save(self, commit=True):
+
+        artist = Artist.objects.get_or_create(name=self.cleaned_data['artist'])[0]
+        trend = Trend.objects.get_or_create(trend=self.cleaned_data['trend'])[0]
+        media = Media.objects.get_or_create(media=self.cleaned_data['media'])[0]
+        
+        self.instance.artist = artist
+        self.instance.trend = trend
+        self.instance.media = media
+        super().save(commit)
+        
+        if self.cleaned_data['new_subject']:
+            subject_list = self.cleaned_data['new_subject'].split(",")
+
+            for i in subject_list:
+                subject = (Subject.objects.get_or_create(subject=i.strip())[0])
+                self.instance.subject.add(subject)
+        return self

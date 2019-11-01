@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'profiles',
     'paintings',
     'stripe',
+    'django_cleanup',
 ]
 
 MIDDLEWARE = [

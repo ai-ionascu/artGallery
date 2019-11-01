@@ -2,8 +2,7 @@ from django.shortcuts import render, reverse, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import Painting, Artist, Subject, Trend, Media
-from .forms import NewPainting
-
+from .forms import NewPainting, EditPainting
 # Create your views here.
 
 def list_paintings_view(request, item=None, id=None, string=''):
@@ -44,3 +43,29 @@ def add_painting_view(request):
     return render(request, 'new_painting.html', 
                 {'painting_form': painting_form})
         
+def edit_painting_view(request, id):
+
+    painting = get_object_or_404(Painting, id=id)
+    
+    if request.method == 'POST':
+        if request.user.profile.profile_type == 'ARTIST':
+            edit_painting_form = EditPainting(request.POST, request.FILES, instance=painting)
+            if edit_painting_form.is_valid():
+                edit_painting_form.save()
+                messages.success(request,'Your painting has been successfully updated.')
+            else:
+                messages.error(request,"We couldn't upload your painting.")
+        else:
+            messages.error(request,"Don't try to cheat, please register as an artist.")
+            return redirect(reverse('register'))
+            
+        return redirect(reverse('painting_detail', kwargs={'id': painting.id}))
+
+    else:
+        edit_painting_form = EditPainting(instance=painting,
+                                        initial={'artist': painting.artist,
+                                                'trend': painting.trend,
+                                                'media': painting.media,
+                                                'subject': [i for i in Subject.objects.filter(painting__id=id)]})
+
+    return render(request, 'edit_painting.html', {'edit_painting_form': edit_painting_form})

@@ -25,6 +25,8 @@
     - Gallery page with all paintings displayed together
     - Detailed view for each painting
     - Add new painting form page
+    - Filtering options by subject / trend / media or size
+    - Update painting characteristics feature
 
 ### Features to be Implemented
 
