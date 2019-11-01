@@ -26,16 +26,24 @@
     - Detailed view for each painting
     - Add new painting form page
     - Filtering options by subject / trend / media or size
-    - Update painting characteristics feature
+    - Update painting characteristics feature (eg. change image, description, subject, size etc.)
+    - Delete painting feature
+    - Add paintings in the gallery allowed only for paid mermbers
+    - Update and delete features limited to painting owner only
+    - Very light styling applied (Bootstrap 4)
 
 ### Features to be Implemented
 
-- Limiting the possibility to add new paintings only to paid members
-- Update and delete painting objects
+- Check/fix bugs in the paintings app
 - A shopping cart object
 - An auction object for purchasing paintings
 - The auction object is supposed to allow customers to place bids
 - The highest bid within a limited time span should become the selling price of a painting
+- Allow customers to rate artists and vice versa
+- Allow customers to add comments/reviews to paintings
+- Create a presentation sheet with data regarding artists and paintings(eg. popularity, number of votes, selling price etc.) 
+- Page styling
+
 
 # Technologies Used
 
