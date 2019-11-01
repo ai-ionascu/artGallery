@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% load bootstrap_tags %}
+
+{% block page_title %}User Profile Page{% endblock %}
+
+{% block page_heading %}Delete painting?{% endblock %}
+
+{% block page_content %}
+
+<form method='POST'>
+    {% csrf_token %}
+    <button class='btn btn-danger' type='submit' value='Delete'>Delete</button>
+    <a href="{% url 'paintings' %}" class='btn btn-secondary'>Cancel</a>
+</form>
+
+{% endblock %}

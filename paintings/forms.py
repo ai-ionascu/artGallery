@@ -1,5 +1,6 @@
 from django import forms
 from django.forms import widgets
+from django.contrib.auth.models import User
 from paintings.models import Painting, Subject, Trend, Media, Artist
 from django.core.validators import ValidationError
 from django.utils.safestring import mark_safe
@@ -48,6 +49,7 @@ class SubjectDataField(forms.CharField):
 class NewPainting(forms.ModelForm):
 
     artist = forms.CharField(required=True)
+    artist_user = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}))
     trend = forms.CharField(required=True)
     media = forms.CharField(required=True)
     subject = SubjectDataField(required=False)
@@ -55,8 +57,6 @@ class NewPainting(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         _items_list = kwargs.pop('data_list', None)
         super().__init__(*args, **kwargs)
-
-        self.fields['artist'].widget = SelectInputWidget(data_list=Artist.objects.all(), name='artist')
         self.fields['trend'].widget = SelectInputWidget(data_list=Trend.objects.all(), name='trend')
         self.fields['media'].widget = SelectInputWidget(data_list=Media.objects.all(), name='media')
         self.fields['subject'].widget = SelectMultipleInputWidget(
@@ -74,10 +74,12 @@ class NewPainting(forms.ModelForm):
     def save(self, commit=True):
 
         artist = Artist.objects.get_or_create(name=self.cleaned_data['artist'])[0]
+        artist_user = User.objects.get(username=self.cleaned_data['artist_user'])
         trend = Trend.objects.get_or_create(trend=self.cleaned_data['trend'])[0]
         media = Media.objects.get_or_create(media=self.cleaned_data['media'])[0]
         
         self.instance.artist = artist
+        self.instance.artist_user = artist_user
         self.instance.trend = trend
         self.instance.media = media
         super().save(commit)
@@ -133,3 +135,10 @@ class EditPainting(forms.ModelForm):
                 subject = (Subject.objects.get_or_create(subject=i.strip())[0])
                 self.instance.subject.add(subject)
         return self
+
+class DeletePainting(forms.ModelForm):
+
+    class Meta:
+        model = Painting
+        fields = ('name',) 
+        widgets = {'name': forms.HiddenInput()}

@@ -1,8 +1,9 @@
 from django.shortcuts import render, reverse, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from .models import Painting, Artist, Subject, Trend, Media
-from .forms import NewPainting, EditPainting
+from .forms import NewPainting, EditPainting, DeletePainting
 # Create your views here.
 
 def list_paintings_view(request, item=None, id=None, string=''):
@@ -24,7 +25,6 @@ def detail_paintings_view(request, id=None):
 
 @login_required
 def add_painting_view(request):
-
     if request.method == 'POST':
         if request.user.profile.profile_type == 'ARTIST':
             painting_form = NewPainting(request.POST, request.FILES)
@@ -38,11 +38,12 @@ def add_painting_view(request):
             messages.error(request,"Don't try to cheat, please register as an artist.")
             return redirect(reverse('register'))
     else:
-        painting_form = NewPainting()
+        painting_form = NewPainting(initial={'artist_user': request.user})
 
     return render(request, 'new_painting.html', 
                 {'painting_form': painting_form})
-        
+
+@login_required        
 def edit_painting_view(request, id):
 
     painting = get_object_or_404(Painting, id=id)
@@ -68,3 +69,19 @@ def edit_painting_view(request, id):
                                                 'subject': [i for i in Subject.objects.filter(painting__id=id)]})
 
     return render(request, 'edit_painting.html', {'edit_painting_form': edit_painting_form})
+
+@login_required
+def delete_painting_view(request, id):
+
+    painting = get_object_or_404(Painting, id=id)
+
+    if request.method == 'POST':
+        if request.user.profile.profile_type == 'ARTIST' and request.user == painting.artist_user:
+            del_painting = Painting.objects.get(id=painting.id)
+            del_painting.delete()
+            messages.success(request, "We have successfully deleted your painting.")
+            return redirect(reverse('paintings'))
+        else:
+            messages.error(request, "You are not allowed to delete this item.")
+
+    return render(request, 'delete_painting.html')
