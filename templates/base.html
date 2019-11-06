@@ -108,8 +108,10 @@
                   Paintings
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="{% url 'new_painting' %}">New</a>
-                  <div class="dropdown-divider"></div>
+                  {% if user.profile.profile_type == 'ARTIST' %}
+                    <a class="dropdown-item" href="{% url 'new_painting' %}">New</a>
+                    <div class="dropdown-divider"></div>
+                  {% endif %}
                   <a class="dropdown-item" href="{% url 'paintings' %}">All Paintings</a>
                 </div>
               </li>

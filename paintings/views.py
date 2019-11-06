@@ -26,7 +26,6 @@ def list_paintings_view(request, item=None, id=None, string=''):
                 item_obj =[i[0] for i in Painting._meta.get_field('{}'.format(item)).choices if i[0]]
  
             paintings_list =[{i:Painting.objects.filter(**{item:i})} for i in item_obj]
-            print(paintings_list)
         else:
             paintings_list = Painting.objects.filter(**{item: string.upper()})  
             if paintings_list.count() is 0:

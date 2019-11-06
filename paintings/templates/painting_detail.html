@@ -42,6 +42,7 @@
             <a type='button' class='btn btn-primary' href="{% url 'paintings' %}">Return to Gallery</a>
         </div>
         <br>
+        {% if user.profile.profile_type == 'ARTIST' %}
         <div>
             <a type='button' class='btn btn-warning' href="{% url 'painting_edit' id=painting.id %}">Update</a>
         </div>
@@ -50,6 +51,7 @@
             <a type='button' class='btn btn-danger' href="{% url 'delete_painting' id=painting.id %}">Delete</a>
         </div>
         <br>
+        {% endif %}
     </div>
 
 {% endblock %}
