@@ -4,30 +4,34 @@
 
 {% block page_title %}Gallery Page{% endblock %}
 
-{% block page_heading %}Gallery{% endblock %}
+{% block page_heading %}
+{% if item and id %}{{ item_obj }}
+{% elif item and string != 'all' %}{{ string.capitalize }}
+{% elif item and string == 'all' %}{{ item.capitalize }}
+{% else %}Gallery
+{% endif %}
+{% endblock %}
 
 {% block page_content %}
-<br>
-{% for painting in paintings %}
 
-    <br>
-        <div class='m-auto w-50'>
-            <h3>{{ painting.artist }}</h3>
-            <h5><a href="{% url 'paintings' %}{{ painting.id }}">{{ painting.name }}</a></h5>
-            <a href="{% url 'paintings' %}{{ painting.id }}">
-                {% if painting.image %}
-                <img src="{{ painting.image.url }}" alt="{{ painting.name }}" max-width="200" height="200"/>
+{% if item and string == 'all' %}
+        {% for p_set in paintings %}        
+            {% for k, v in p_set.items %}
+                {% if v %}
+                    <h3>{{ k }}</h3>
+                    {% for painting in v %}
+                        {% include 'list_item.html' %}
+                    {% endfor %}
+                {% else %}
+                    <h6>{{ k }}</h6>
                 {% endif %}
-            </a>
-            <p>Price: {{ painting.price }}</p>
-            {% if painting.availability %}
-                <p>Available</p>
-            {% else %}
-                <p>Out of Stock</p>
-            {% endif %}
-        </div>
-    <br>
-  
-{% endfor %}
+            {% endfor %} 
+        {% endfor %}
+{% else %}
+    {% for painting in paintings %}
+        {% include 'list_item.html' %}
+    {% endfor %} 
+{% endif %}
+
 
 {% endblock %}

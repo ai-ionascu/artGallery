@@ -49,7 +49,7 @@ class SubjectDataField(forms.CharField):
 class NewPainting(forms.ModelForm):
 
     artist = forms.CharField(required=True)
-    artist_user = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}))
+    artist_user = forms.CharField(widget=forms.HiddenInput(attrs={'readonly':'readonly'}))
     trend = forms.CharField(required=True)
     media = forms.CharField(required=True)
     subject = SubjectDataField(required=False)

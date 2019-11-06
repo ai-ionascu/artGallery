@@ -54,10 +54,10 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   {% for t in trend %}
-                  <a class="dropdown-item" href="{% url 'paintings' %}filter/trend/{{ t.id }}">{{ t }}</a>
+                  <a class="dropdown-item" href="{% url 'filter' item='trend' id=t.id %}">{{ t }}</a>
                   {% endfor %}
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="{% url 'paintings' %}">All Trends</a>
+                  <a class="dropdown-item" href="{% url 'string_filter' item='trend' string='all' %}">All Trends</a>
                 </div>
               </li>
             
@@ -68,10 +68,10 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   {% for s in subject %}
-                  <a class="dropdown-item" href="{% url 'paintings' %}filter/subject/{{ s.id }}">{{ s }}</a>
+                  <a class="dropdown-item" href="{% url 'filter' item='subject' id=s.id %}">{{ s }}</a>
                   {% endfor %}
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="{% url 'paintings' %}">All Subjects</a>
+                  <a class="dropdown-item" href="{% url 'string_filter' item='subject' string='all' %}">All Subjects</a>
                 </div>
             </li>
             
@@ -81,10 +81,10 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   {% for m in media %}
-                  <a class="dropdown-item" href="{% url 'paintings' %}filter/media/{{ m.id }}">{{ m }}</a>
+                  <a class="dropdown-item" href="{% url 'filter' item='media' id=m.id %}">{{ m }}</a>
                   {% endfor %}
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="{% url 'paintings' %}">All Media</a>
+                  <a class="dropdown-item" href="{% url 'string_filter' item='media' string='all' %}">All Media</a>
                 </div>
               </li>
               
@@ -95,18 +95,25 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   {% for x,y in size %}
                     {% if x != '' %}
-                      <a class="dropdown-item" href="{% url 'paintings' %}filter/size/{{ y }}">{{ y }}</a>
+                      <a class="dropdown-item" href="{% url 'string_filter' item='size' string=y %}">{{ y }}</a>
                     {% endif %}
                   {% endfor %}
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="{% url 'paintings' %}">All Sizes</a>
+                  <a class="dropdown-item" href="{% url 'string_filter' item='size' string='all' %}">All Sizes</a>
                 </div>
               </li>
               
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'paintings' %}">Paintings</a>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Paintings
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="{% url 'new_painting' %}">New</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="{% url 'paintings' %}">All Paintings</a>
+                </div>
               </li>
-              
+
               <li class="nav-item">
                 <a class="nav-link" href="#">Artists</a>
               </li>

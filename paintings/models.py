@@ -44,7 +44,7 @@ class Painting(models.Model):
     trend = models.ForeignKey(Trend, on_delete=models.CASCADE)
     media = models.ForeignKey(Media, on_delete=models.CASCADE)
     year = models.IntegerField()
-    SIZE_CHOICES = (('', '---------'), ('SMALL', 'Small'), ('SMALL', 'Medium'), ('SMALL', 'Large'))
+    SIZE_CHOICES = (('', '---------'), ('SMALL', 'Small'), ('MEDIUM', 'Medium'), ('LARGE', 'Large'))
     size = models.CharField(max_length=24, choices=SIZE_CHOICES, default='')
     price = models.DecimalField(max_digits=24, decimal_places=2)
     availability = models.BooleanField()
