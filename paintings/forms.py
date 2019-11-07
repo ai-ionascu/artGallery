@@ -1,7 +1,8 @@
 from django import forms
 from django.forms import widgets
 from django.contrib.auth.models import User
-from paintings.models import Painting, Subject, Trend, Media, Artist
+from paintings.models import Painting, Subject, Trend, Media
+from artists.models import Artist
 from django.core.validators import ValidationError
 from django.utils.safestring import mark_safe
 

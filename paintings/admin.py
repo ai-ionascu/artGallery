@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Artist, Painting, Subject, Trend, Media
+from .models import Painting, Subject, Trend, Media
 from django.utils.html import format_html
 from django.contrib.admin.sites import AlreadyRegistered
 
@@ -27,8 +27,8 @@ class PaintingAdmin(admin.ModelAdmin):
 
 admin.site.register(Painting, PaintingAdmin)
 
-for m_admin in ['ArtistAdmin', 'SubjectAdmin', 'TrendAdmin', 'MediaAdmin']:
-    for m in [Artist, Subject, Trend, Media]:
+for m_admin in ['SubjectAdmin', 'TrendAdmin', 'MediaAdmin']:
+    for m in [Subject, Trend, Media]:
         class m_admin(admin.ModelAdmin):   
             model = m
             def get_model_perms(self, request):

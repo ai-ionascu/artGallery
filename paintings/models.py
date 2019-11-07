@@ -1,19 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
+from artists.models import Artist
 
 # Create your models here.
-
-class Artist(models.Model):
-
-    name = models.CharField(max_length=128, blank=False, null=False)
-    image = models.ImageField(upload_to='images', default='/default/default_img.jpg')
-    bio = models.TextField(blank=True)
-    born_year = models.IntegerField(blank=True)
-    deceased_year = models.IntegerField(blank=True)
-
-    def __str__(self):
-        return self.name
 
 class Subject(models.Model):
 

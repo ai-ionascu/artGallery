@@ -2,7 +2,8 @@ from django.shortcuts import render, reverse, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Painting, Artist, Subject, Trend, Media
+from .models import Painting, Subject, Trend, Media
+from artists.models import Artist
 from .forms import NewPainting, EditPainting, DeletePainting
 from django.apps import apps
 from django.db.models import Count

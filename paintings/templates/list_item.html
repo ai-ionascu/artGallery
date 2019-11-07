@@ -1,6 +1,6 @@
 <br>
     <div class='m-auto w-50'>
-        <h3>{{ painting.artist }}</h3>
+        <h3><a href="{% url 'artist_detail' id=painting.artist.id %}">{{ painting.artist }}</a></h3>
         <h5><a href="{% url 'paintings' %}{{ painting.id }}">{{ painting.name }}</a></h5>
         <a href="{% url 'paintings' %}{{ painting.id }}">
             {% if painting.image %}
