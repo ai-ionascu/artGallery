@@ -49,6 +49,7 @@ class SubjectDataField(forms.CharField):
 class NewPainting(forms.ModelForm):
 
     artist = forms.CharField(required=True)
+    artist_image = forms.ImageField(required=False)
     artist_user = forms.CharField(widget=forms.HiddenInput(attrs={'readonly':'readonly'}))
     trend = forms.CharField(required=True)
     media = forms.CharField(required=True)
@@ -73,7 +74,9 @@ class NewPainting(forms.ModelForm):
 
     def save(self, commit=True):
 
+        artist_img = self.cleaned_data['artist_image'] if self.cleaned_data['artist_image'] else '/static/img/default_img.jpg'
         artist = Artist.objects.get_or_create(name=self.cleaned_data['artist'])[0]
+        # artist.objects.add(image=self.cleaned_data['artist_image'])
         artist_user = User.objects.get(username=self.cleaned_data['artist_user'])
         trend = Trend.objects.get_or_create(trend=self.cleaned_data['trend'])[0]
         media = Media.objects.get_or_create(media=self.cleaned_data['media'])[0]

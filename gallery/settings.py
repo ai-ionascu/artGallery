@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'home',
     'profiles',
     'paintings',
+    'artists',
     'stripe',
     'django_cleanup',
 ]

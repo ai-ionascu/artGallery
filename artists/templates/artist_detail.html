@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% load bootstrap_tags %}
+
+{% block page_title %}Artist Page{% endblock %}
+
+{% block page_heading %}
+<br>
+    <div class="container m-auto">
+        <h3>{{ artist.name }}</h3>
+    </div>
+{% endblock %}
+
+{% block page_content %}
+<br>
+    <div class='mx-auto mb-4 container'>
+        <div class="mb-4">
+            {% if artist.image %}
+            <img src="{{ artist.image.url }}" alt="{{ artist.name }}" max-width="200" height="500"/>
+            {% endif %}
+        </div>
+        {% if artist.bio %}
+        <p>Bio: {{ artist.bio }}</p>
+        {% endif %}
+        {% if artist.born_year and artist.deceased_year %}
+        <p>Years: {{ artist.born_year }} - {{ artist.deceased_year }}</p>
+        {% endif %}
+        <br>
+        <div>
+            <a type='button' class='btn btn-primary' href="{% url 'artists' %}">Back</a>
+        </div>
+        <br>
+    </div>
+
+{% endblock %}
