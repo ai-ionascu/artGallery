@@ -18,6 +18,7 @@ class AddressMixin(models.Model):
 class Profile(AddressMixin, models.Model):
     
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    avatar = models.ImageField(upload_to='images', default='/default/default_avatar.png')
     PROFILE_CHOICES = (('ARTIST', 'Artist'), ('CUSTOMER', 'Customer'))
     profile_type = models.CharField(max_length=24, choices=PROFILE_CHOICES, blank=True, default='')
     phone = models.CharField(max_length=24, null=False, blank=True, default='')

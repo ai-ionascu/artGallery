@@ -12,6 +12,7 @@
 
     {% csrf_token %}
 
+    <img src="{{ user.profile.avatar.url }}" alt="{user.profile.avatar.name}" max-width="200" height="100"/>
     <p>Your email address: {{ user.email }}</p>
 
     {{ edit_user_form | as_bootstrap }}
