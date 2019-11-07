@@ -20,12 +20,15 @@ class PaintingAdmin(admin.ModelAdmin):
 
     image_tag.short_description = 'Image Preview'
 
-    fields = ( 'name', 'artist', 'artist_user', 'image',
+    fields = ( 'name', 'artist', 'owner', 'image',
              'image_tag', 'description', 'subject', 'trend', 'media', 'year', 'size', 'price', 'availability' )
     readonly_fields = ('image_tag', )
-    list_display = ['name', 'artist', 'image_tag', ]
+    list_display = ['name', 'artist', 'image_tag', 'owner', ]
 
 admin.site.register(Painting, PaintingAdmin)
+admin.site.register(Trend)
+admin.site.register(Media)
+admin.site.register(Subject)
 
 for m_admin in ['SubjectAdmin', 'TrendAdmin', 'MediaAdmin']:
     for m in [Subject, Trend, Media]:

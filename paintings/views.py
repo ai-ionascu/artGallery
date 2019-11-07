@@ -43,7 +43,7 @@ def detail_paintings_view(request, id=None):
 def add_painting_view(request):
     if request.method == 'POST':
         if request.user.profile.profile_type == 'ARTIST':
-            painting_form = NewPainting(request.POST, request.FILES)
+            painting_form = NewPainting(request.POST, request.FILES, request=request)
             if painting_form.is_valid():
                 painting_form.save()
                 messages.success(request,'Your painting has been successfully uploaded.')
@@ -54,7 +54,7 @@ def add_painting_view(request):
             messages.error(request,"Don't try to cheat, please register as an artist.")
             return redirect(reverse('register'))
     else:
-        painting_form = NewPainting(initial={'artist_user': request.user})
+        painting_form = NewPainting(initial={'owner': request.user})
 
     return render(request, 'new_painting.html', 
                 {'painting_form': painting_form})

@@ -2,34 +2,34 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.conf import settings
 from artists.models import Artist
+from home.models import OwnerMixin
 
 # Create your models here.
 
-class Subject(models.Model):
+class Subject(OwnerMixin, models.Model):
 
     subject = models.CharField(max_length=128, default='')
 
     def __str__(self):
         return self.subject
 
-class Trend(models.Model):
+class Trend(OwnerMixin, models.Model):
 
     trend = models.CharField(max_length=128, default='')
 
     def __str__(self):
         return self.trend
 
-class Media(models.Model):
+class Media(OwnerMixin, models.Model):
 
     media = models.CharField(max_length=128, default='')
     
     def __str__(self):
         return self.media
 
-class Painting(models.Model):
+class Painting(OwnerMixin, models.Model):
     name = models.CharField(max_length=128, default='') 
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
-    artist_user = models.ForeignKey(User)
     image = models.ImageField(upload_to='images')
     description = models.TextField()
     subject = models.ManyToManyField(Subject) 

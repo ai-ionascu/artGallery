@@ -13,8 +13,8 @@ class ArtistAdmin(admin.ModelAdmin):
 
     image_tag.short_description = 'Image Preview'
 
-    fields = ( 'name', 'image', 'bio', 'born_year', 'deceased_year' )
+    fields = ( 'name', 'image', 'bio', 'born_year', 'deceased_year', 'owner', )
     readonly_fields = ('image_tag', )
-    list_display = ['name', 'image_tag', ]
+    list_display = ['name', 'image_tag', 'owner', ]
 
 admin.site.register(Artist, ArtistAdmin)
