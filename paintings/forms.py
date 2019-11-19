@@ -51,7 +51,6 @@ class NewPainting(forms.ModelForm):
 
     artist = forms.CharField(required=True)
     artist_image = forms.ImageField(required=False)
-    # owner = forms.CharField(widget=forms.HiddenInput(attrs={'readonly':'readonly'}))
     trend = forms.CharField(required=True)
     media = forms.CharField(required=True)
     subject = SubjectDataField(required=False)
@@ -125,23 +124,41 @@ class EditPainting(forms.ModelForm):
     class Meta:
         model = Painting
         fields = ('name', 'image', 'description', 'year',
-                'subject', 'size', 'availability')
+                'subject', 'size', 'price', 'availability')
 
     def __init__(self, *args, **kwargs):
-        _items_list = kwargs.pop('data_list', None)
+
+        self.request = kwargs.pop('request', None)
+        instance = kwargs.get('instance', None)
         super().__init__(*args, **kwargs)
 
-        self.fields['artist'].widget = SelectInputWidget(data_list=Artist.objects.all(), name='artist')
-        self.fields['trend'].widget = SelectInputWidget(data_list=Trend.objects.all(), name='trend')
-        self.fields['media'].widget = SelectInputWidget(data_list=Media.objects.all(), name='media')
-        print(self.fields['image'].initial)
-        print(self.fields['image'])
+        for f in instance._meta.fields:
+            if f.related_model and f.related_model not in [User, Subject]:
+                self.fields[f.name].initial = f.related_model.objects.get(painting__id=instance.id)
+                self.fields[f.name].widget = SelectInputWidget(data_list=f.related_model.objects.all(), name=f.name)
+            elif f.related_model is Subject:
+                self.fields[f.name].initial = f.related_model.objects.filter(painting__id=instance.id) 
+
     def save(self, commit=True):
 
-        artist = Artist.objects.get_or_create(name=self.cleaned_data['artist'])[0]
-        trend = Trend.objects.get_or_create(trend=self.cleaned_data['trend'])[0]
-        media = Media.objects.get_or_create(media=self.cleaned_data['media'])[0]
-        
+        owner = User.objects.get(username=self.request.user.username) if self.request is not None else None
+
+        try:
+            artist = Artist.objects.get(name=self.cleaned_data['artist'])
+        except Artist.DoesNotExist:
+            artist = Artist(name=self.cleaned_data['artist'], owner=owner)
+            artist.save()
+        try:
+            trend = Trend.objects.get(trend=self.cleaned_data['trend'])
+        except Trend.DoesNotExist:
+            trend = Trend(trend=self.cleaned_data['trend'], owner=owner)
+            trend.save()
+        try:
+            media = Media.objects.get(media=self.cleaned_data['media'])
+        except Media.DoesNotExist:
+            media = Media(media=self.cleaned_data['media'], owner=owner)
+            media.save()
+
         self.instance.artist = artist
         self.instance.trend = trend
         self.instance.media = media
@@ -151,7 +168,11 @@ class EditPainting(forms.ModelForm):
             subject_list = self.cleaned_data['new_subject'].split(",")
 
             for i in subject_list:
-                subject = (Subject.objects.get_or_create(subject=i.strip())[0])
+                try:
+                    subject = Subject.objects.get(subject=i.strip())
+                except Subject.DoesNotExist:
+                    subject = Subject(subject=i.strip(), owner=owner)
+                    subject.save()
                 self.instance.subject.add(subject)
         return self
 

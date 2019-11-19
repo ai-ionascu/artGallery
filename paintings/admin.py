@@ -26,18 +26,21 @@ class PaintingAdmin(admin.ModelAdmin):
     list_display = ['name', 'artist', 'image_tag', 'owner', ]
 
 admin.site.register(Painting, PaintingAdmin)
-admin.site.register(Trend)
-admin.site.register(Media)
-admin.site.register(Subject)
+# admin.site.register(Trend)
+# admin.site.register(Media)
+# admin.site.register(Subject)
 
-for m_admin in ['SubjectAdmin', 'TrendAdmin', 'MediaAdmin']:
-    for m in [Subject, Trend, Media]:
-        class m_admin(admin.ModelAdmin):   
-            model = m
-            def get_model_perms(self, request):
-                return {}
-        try:
-            admin.site.register(m, m_admin)
-        except AlreadyRegistered:
-            pass 
+for m in [Subject, Trend, Media]:
+    class m_admin(admin.ModelAdmin): 
+        def rename(self):
+            self.__name__ = '{}Admin'.format(m)
+            return self 
+        model = m
+        def get_model_perms(self, request):
+            return {}
+
+    try:
+        admin.site.register(m, m_admin)
+    except AlreadyRegistered:
+        pass 
       

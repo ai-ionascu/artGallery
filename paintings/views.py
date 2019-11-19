@@ -65,10 +65,26 @@ def edit_painting_view(request, id):
     painting = get_object_or_404(Painting, id=id)
     
     if request.method == 'POST':
-        if request.user.profile.profile_type == 'ARTIST' and request.user == painting.artist_user:
-            edit_painting_form = EditPainting(request.POST, request.FILES, instance=painting)
-            if edit_painting_form.is_valid():
+        if request.user.profile.profile_type == 'ARTIST' and request.user == painting.owner:
+            edit_painting_form = EditPainting(request.POST, request.FILES, request=request, instance=painting)
+
+            if edit_painting_form.is_valid(): 
                 edit_painting_form.save()
+                
+                for f in painting._meta.get_fields():
+                    if f.related_model and f.related_model is not User:
+                        initial_object = edit_painting_form['{}'.format(f.name)].initial
+                        print(initial_object)
+                        if f.related_model is Subject:
+                            for item in initial_object:
+                                if item in f.related_model.objects.filter(owner=request.user, painting__isnull=True):
+                                    print(item, 'has to be deleted')
+                                    item.delete()
+                        else:
+                            if initial_object in f.related_model.objects.filter(owner=request.user, painting__isnull=True):
+                                print(initial_object, 'has to be deleted')
+                                initial_object.delete()
+
                 messages.success(request,'Your painting has been successfully updated.')
             else:
                 messages.error(request,"We couldn't upload your painting.")
@@ -78,12 +94,7 @@ def edit_painting_view(request, id):
         return redirect(reverse('painting_detail', kwargs={'id': painting.id}))
 
     else:
-        edit_painting_form = EditPainting(instance=painting,
-                                        initial={'artist': painting.artist,
-                                                'trend': painting.trend,
-                                                'media': painting.media,
-                                                'subject': [i for i in Subject.objects.filter(painting__id=id)]})
-
+        edit_painting_form = EditPainting(instance=painting)
     return render(request, 'edit_painting.html', {'edit_painting_form': edit_painting_form})
 
 @login_required
@@ -92,7 +103,7 @@ def delete_painting_view(request, id):
     painting = get_object_or_404(Painting, id=id)
 
     if request.method == 'POST':
-        if request.user.profile.profile_type == 'ARTIST' and request.user == painting.artist_user:
+        if request.user.profile.profile_type == 'ARTIST' and request.user == painting.owner:
             del_painting = Painting.objects.get(id=painting.id)
             del_painting.delete()
             messages.success(request, "We have successfully deleted your painting.")
