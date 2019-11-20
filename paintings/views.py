@@ -101,14 +101,32 @@ def edit_painting_view(request, id):
 def delete_painting_view(request, id):
 
     painting = get_object_or_404(Painting, id=id)
-
+    
     if request.method == 'POST':
         if request.user.profile.profile_type == 'ARTIST' and request.user == painting.owner:
-            del_painting = Painting.objects.get(id=painting.id)
-            del_painting.delete()
+            
+            painting.delete()
+            
+            for f in painting._meta.get_fields():
+                if f.related_model and f.related_model is not User:
+                    if f.related_model is Subject:
+                        mtm=f.related_model.objects.filter(owner=request.user, painting__id=painting.id)
+                        print(f.value_from_object(painting))
+                        for m in mtm:
+                            if not Painting.objects.filter(**{'{}'.format(f.name):m}):
+                                print(m, 'to be deleted')
+                                print(not Painting.objects.filter(**{'{}'.format(f.name):m}))
+                                m.delete()
+                    else:
+                        fk=f.related_model.objects.filter(owner=request.user, painting__id=painting.id)
+                        if not Painting.objects.filter(**{'{}_id'.format(f.name):fk}):
+                            print(fk, 'to be deleted')
+                            print(not Painting.objects.filter(**{'{}_id'.format(f.name):fk}))
+                            fk.delete()
+
             messages.success(request, "We have successfully deleted your painting.")
             return redirect(reverse('paintings'))
         else:
             messages.error(request, "You are not allowed to delete this item.")
-
-    return render(request, 'delete_painting.html')
+          
+    return render(request, 'delete_painting.html', {'painting': painting})
