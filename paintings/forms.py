@@ -59,6 +59,7 @@ class NewPainting(forms.ModelForm):
         
         self.request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
+        self.fields['artist'].widget = SelectInputWidget(data_list=Artist.objects.all(), name='artist')
         self.fields['trend'].widget = SelectInputWidget(data_list=Trend.objects.all(), name='trend')
         self.fields['media'].widget = SelectInputWidget(data_list=Media.objects.all(), name='media')
         self.fields['subject'].widget = SelectMultipleInputWidget(
@@ -76,26 +77,18 @@ class NewPainting(forms.ModelForm):
 
         owner = User.objects.get(username=self.request.user.username) if self.request is not None else None
 
-        try:
-            artist = Artist.objects.get(name=self.cleaned_data['artist'])
-        except Artist.DoesNotExist:
-            artist = Artist(name=self.cleaned_data['artist'], owner=owner)
-            artist.save()
-        try:
-            trend = Trend.objects.get(trend=self.cleaned_data['trend'])
-        except Trend.DoesNotExist:
-            trend = Trend(trend=self.cleaned_data['trend'], owner=owner)
-            trend.save()
-        try:
-            media = Media.objects.get(media=self.cleaned_data['media'])
-        except Media.DoesNotExist:
-            media = Media(media=self.cleaned_data['media'], owner=owner)
-            media.save()
+        for f in self.instance._meta.fields:
+            if f.related_model and f.related_model not in [User, Subject]:
+                try:
+                    item = f.related_model.objects.get(**{f.name:self.cleaned_data['{}'.format(f.name)]})
+                except f.related_model.DoesNotExist:
+                    item = f.related_model(**{f.name:self.cleaned_data['{}'.format(f.name)]}, owner=owner)
+                    item.save()
+                
+                self.instance.__setattr__('{}'.format(f.name), item)
 
-        self.instance.artist = artist
         self.instance.owner = owner
-        self.instance.trend = trend
-        self.instance.media = media
+
         super().save(commit)
         
         subject_list = self.cleaned_data['subject'].split(",")
@@ -141,27 +134,16 @@ class EditPainting(forms.ModelForm):
 
     def save(self, commit=True):
 
-        owner = User.objects.get(username=self.request.user.username) if self.request is not None else None
+        for f in self.instance._meta.fields:
+            if f.related_model and f.related_model not in [User, Subject]:
+                try:
+                    item = f.related_model.objects.get(**{f.name:self.cleaned_data['{}'.format(f.name)]})
+                except f.related_model.DoesNotExist:
+                    item = f.related_model(**{f.name:self.cleaned_data['{}'.format(f.name)]}, owner=owner)
+                    item.save()
+                
+                self.instance.__setattr__('{}'.format(f.name), item)
 
-        try:
-            artist = Artist.objects.get(name=self.cleaned_data['artist'])
-        except Artist.DoesNotExist:
-            artist = Artist(name=self.cleaned_data['artist'], owner=owner)
-            artist.save()
-        try:
-            trend = Trend.objects.get(trend=self.cleaned_data['trend'])
-        except Trend.DoesNotExist:
-            trend = Trend(trend=self.cleaned_data['trend'], owner=owner)
-            trend.save()
-        try:
-            media = Media.objects.get(media=self.cleaned_data['media'])
-        except Media.DoesNotExist:
-            media = Media(media=self.cleaned_data['media'], owner=owner)
-            media.save()
-
-        self.instance.artist = artist
-        self.instance.trend = trend
-        self.instance.media = media
         super().save(commit)
         
         if self.cleaned_data['new_subject']:

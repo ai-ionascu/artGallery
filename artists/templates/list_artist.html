@@ -2,9 +2,9 @@
     <div class='m-auto w-50'>
         {% if artist.image %}
         <a href="{% url 'artist_detail' id=artist.id %}">
-            <img src="{{ artist.image.url }}" alt="{{ artist.name }}" max-width="200" height="200"/>
+            <img src="{{ artist.image.url }}" alt="{{ artist.artist }}" max-width="200" height="200"/>
         </a>
         {% endif %}
-        <h3><a href="{% url 'artist_detail' id=artist.id %}">{{ artist.name }}</a></h3>
+        <h3><a href="{% url 'artist_detail' id=artist.id %}">{{ artist.artist }}</a></h3>
     </div>
 <br>

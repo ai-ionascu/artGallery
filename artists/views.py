@@ -5,7 +5,7 @@ from paintings.models import Artist
 
 def list_artists_view(request):
          
-    artists_list = Artist.objects.all().order_by('name')
+    artists_list = Artist.objects.all().order_by('artist')
     return render(request, 'artists_list.html', {'artists': artists_list})
 
 def detail_artist_view(request, id=None):
