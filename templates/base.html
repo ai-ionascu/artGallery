@@ -37,7 +37,7 @@
         <br>
         
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-          <a class="navbar-brand" href="{% url 'index' %}"><img src="media/default/logo.png" alt="logo" max height=70px></a>
+          <a class="navbar-brand" href="{% url 'index' %}"><img src="/media/default/logo.png" alt="logo" max height=70px></a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -104,16 +104,20 @@
               </li>
               
               <li class="nav-item dropdown">
+                {% if user.is_authenticated and user.profile.profile_type == 'ARTIST' %}
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Paintings
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  {% if user.profile.profile_type == 'ARTIST' %}
-                    <a class="dropdown-item" href="{% url 'new_painting' %}">New</a>
-                    <div class="dropdown-divider"></div>
-                  {% endif %}
+                  <a class="dropdown-item" href="{% url 'new_painting' %}">New</a>
+                  <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="{% url 'paintings' %}">All Paintings</a>
                 </div>
+                {% else %}
+                <a class="nav-link" href=" {% url 'paintings' %} " id="navbarDropdown" >
+                  Paintings
+                </a>
+                {% endif %}
               </li>
 
               <li class="nav-item">

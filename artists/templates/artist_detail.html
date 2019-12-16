@@ -16,7 +16,7 @@
     <div class='mx-auto mb-4 container'>
         <div class="mb-4">
             {% if artist.image %}
-            <img src="{{ artist.image.url }}" alt="{{ artist.name }}" max-width="200" height="500"/>
+            <img src="{{ artist.image.url }}" alt="{{ artist.artist }}" max-width="200" height="500"/>
             {% endif %}
         </div>
         {% if artist.bio %}
@@ -27,6 +27,7 @@
         {% endif %}
         <br>
         <div>
+            <a type='button' class='btn btn-primary' href="{% url 'filter' item='artist' id=artist.id %}">Paintings of {{ artist.artist }}</a>
             <a type='button' class='btn btn-primary' href="{% url 'artists' %}">Back</a>
         </div>
         <br>

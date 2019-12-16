@@ -14,8 +14,9 @@ def list_paintings_view(request, item=None, id=None, string=''):
     item_obj = None
     if item and id and not string:
         paintings_list = Painting.objects.filter(**{item: id})
-        model = apps.get_model('paintings', item.capitalize())
-        item_obj = model.objects.get(id=id)
+        if item != 'artist':
+            model = apps.get_model('paintings', item.capitalize())
+            item_obj = model.objects.get(id=id)
         if paintings_list.count() is 0:
             messages.error(request, "Our gallery doesn't have any item of the selected type.")
     elif item and not id and string:
