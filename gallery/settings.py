@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'profiles',
     'paintings',
     'artists',
+    'cart',
     'stripe',
     'django_cleanup',
 ]
@@ -73,6 +74,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'home.context_processors.subscription_to_context',
                 'home.context_processors.navbar',
+                'cart.contexts.cart_contents',
             ],
         },
     },

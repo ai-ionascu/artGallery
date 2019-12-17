@@ -21,6 +21,7 @@ from home.views import index_view
 from profiles import urls as urls_profiles
 from paintings import urls as urls_paintings
 from artists import urls as urls_artists
+from cart import urls as urls_cart
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -28,6 +29,7 @@ urlpatterns = [
     url(r'^profiles/', include(urls_profiles)),
     url(r'^paintings/', include(urls_paintings)),
     url(r'^artists/', include(urls_artists)),
+    url(r'^cart/', include(urls_cart)),
 ]
 
 if settings.DEBUG:

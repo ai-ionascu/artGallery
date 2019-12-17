@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% load bootstrap_tags %}
+
+{% block page_title %}Cart{% endblock %}
+
+{% block page_heading %}Cart{% endblock %}
+
+{% block page_content %}
+
+<div class="container-fluid">
+    
+    <div class="row">
+        {% for item in cart_items %}
+        <div class="card col-10 offset-1 offset-sm-0 col-sm-6 col-md-4 card">
+            <div style="background: url({{ item.painting.image.url }}) center/contain no-repeat; height:250px;"></div>
+                <h5 class="card-title">{{ item.painting.name }}</h5>
+                <div class="d-flex justify-content-between">
+                    <div class="d-flex">Price:<span> {{ item.painting.price }}</span></div>
+                    <div class="d-flex">Qty:<span> {{item.quantity}}</span></div>
+                </div>
+                <form class="form" method="post" action="{% url 'adjust_cart' item.id %}" class="m-auto">
+                    {% csrf_token %}
+                    <div class="input-group-prepend p-1">
+                        <input name="quantity" type="number" value="{{item.quantity}}" min="0" max="2">
+                        <div class="input-group-prepend">
+                            <button type="submit" class="input-group-text px-1" id="addon-wrapping">Update Qty</button>
+                        </div>
+                    </div>
+                </form>
+            </div>  
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="col m-3">
+        <p>Total: <span>{{ total }}</span></p>
+        
+        <a href="#" class="btn btn-success" role="button">Checkout</a>
+    </div>
+</div>
+
+
+{% endblock %}

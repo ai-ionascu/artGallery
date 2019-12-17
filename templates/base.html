@@ -4,6 +4,8 @@
     <head>
         <!-- <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" /> -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="https://kit.fontawesome.com/e8e6cf91f9.js" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
@@ -29,14 +31,21 @@
               {% elif subscription == True %}
                 <li class="nav-item px-3"><a href="{% url 'resubscribe' %}">Reactivate Subscription</a></li>
 
-              {% endif %}            
-                
+              {% endif %} 
             </ul>
+            <div>
+              <a href="{% url 'view_cart' %}">
+                <i class="fas fa-cart-plus"></i> Cart
+                  {% if painting_count > 0 %}
+                  <label class="badge badge-warning">{{ painting_count }}</label>
+                  {% endif %}
+              </a>
+            </div>
         </nav>
         
         <br>
         
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light p-0">
           <a class="navbar-brand" href="{% url 'index' %}"><img src="/media/default/logo.png" alt="logo" max height=70px></a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -103,8 +112,8 @@
                 </div>
               </li>
               
-              <li class="nav-item dropdown">
-                {% if user.is_authenticated and user.profile.profile_type == 'ARTIST' %}
+              {% if user.is_authenticated and user.profile.profile_type == 'ARTIST' %}
+              <li class="nav-item dropdown">  
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Paintings
                 </a>
@@ -113,13 +122,13 @@
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="{% url 'paintings' %}">All Paintings</a>
                 </div>
-                {% else %}
-                <a class="nav-link" href=" {% url 'paintings' %} " id="navbarDropdown" >
-                  Paintings
-                </a>
-                {% endif %}
               </li>
-
+              {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href=" {% url 'paintings' %} " id="navbarDropdown" >Paintings</a>
+              </li>
+              {% endif %}
+              
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'artists' %}">Artists</a>
               </li>

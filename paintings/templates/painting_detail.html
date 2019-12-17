@@ -37,6 +37,19 @@
         {% else %}
             <p>Out of Stock</p>
         {% endif %}
+
+        <form method="post" action="{% url 'add_to_cart' painting.id %}">
+            {% csrf_token %}
+            <div class="input-group">
+                <input name='quantity' type="number" min="1" max="2" class="form-control" placeholder="Quantity">
+                <span class="input-group-btn">
+                        <button class="btn btn-success" type="submit">Add</button>
+                        </span>
+            </div>
+            <!-- /input-group -->
+
+        </form>
+
         <br>
         <div>
             <a type='button' class='btn btn-primary' href="{% url 'paintings' %}">Return to Gallery</a>
