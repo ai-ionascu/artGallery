@@ -1,10 +1,10 @@
 <br>
-    <div class='m-auto w-50'>
+    <div class='col-10 offset-1 offset-sm-0 col-sm-5 col-md-3 card m-2'>
         {% if artist.image %}
         <a href="{% url 'artist_detail' id=artist.id %}">
-            <img src="{{ artist.image.url }}" alt="{{ artist.artist }}" max-width="200" height="200"/>
+            <div style="background: url({{ artist.image.url }}) center/contain no-repeat; height:250px;"></div>
         </a>
         {% endif %}
-        <h3><a href="{% url 'artist_detail' id=artist.id %}">{{ artist.artist }}</a></h3>
+        <h5 class="d-flex justify-content-center"><a href="{% url 'artist_detail' id=artist.id %}">{{ artist.artist }}</a></h5>
     </div>
 <br>

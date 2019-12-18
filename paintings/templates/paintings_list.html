@@ -19,18 +19,27 @@
             {% for k, v in p_set.items %}
                 {% if v %}
                     <h3>{{ k }}</h3>
-                    {% for painting in v %}
-                        {% include 'list_item.html' %}
-                    {% endfor %}
+                    <div class="container-fluid">
+                        <div class="row">
+                            {% for painting in v %}
+                                {% include 'list_item.html' %}
+                            {% endfor %}
+                        </div>
+                    </div>
                 {% else %}
                     <h6>{{ k }}</h6>
                 {% endif %}
             {% endfor %} 
         {% endfor %}
 {% else %}
-    {% for painting in paintings %}
-        {% include 'list_item.html' %}
-    {% endfor %} 
+    <div class="container-fluid">
+        <div class="row">
+            {% for painting in paintings %}
+                {% include 'list_item.html' %}
+            {% endfor %}
+        </div>
+    </div>
+     
 {% endif %}
 
 
