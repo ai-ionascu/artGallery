@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Painting, Subject, Trend, Media
 from artists.models import Artist
+from checkout.models import OrderLineItem
 from .forms import NewPainting, EditPainting, DeletePainting
 from django.apps import apps
 from django.db.models import Count
@@ -118,7 +119,7 @@ def delete_painting_view(request, id):
                                 print(m, 'to be deleted')
                                 print(not Painting.objects.filter(**{'{}'.format(f.name):m}))
                                 m.delete()
-                    else:
+                    elif f.related_model is not OrderLineItem:
                         fk=f.related_model.objects.filter(owner=request.user, painting__id=painting.id)
                         if not Painting.objects.filter(**{'{}_id'.format(f.name):fk}):
                             print(fk, 'to be deleted')
