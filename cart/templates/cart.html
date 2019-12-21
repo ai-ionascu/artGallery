@@ -12,7 +12,7 @@
     
     <div class="row justify-content-start">
         {% for item in cart_items %}
-        <div class="card col-10 offset-1 offset-sm-0 col-sm-6 col-md-4 card m-2">
+        <div class="card col-10 offset-1 offset-sm-0 col-sm-6 col-md-4 m-2">
             <div style="background: url({{ item.painting.image.url }}) center/contain no-repeat; height:250px;"></div>
             <h5 class="card-title">{{ item.painting.name }}</h5>
             <div class="d-flex justify-content-between">
@@ -34,9 +34,9 @@
 </div>
     
     <div class="col m-3">
-        <p>Total: <span>{{ total }}</span></p>
+        <p>Total: <span>{{ total }} </span><i class="fas fa-euro-sign"></i></p>
         
-        <a href="#" class="btn btn-success" role="button">Checkout</a>
+        <a href="{% url 'checkout' %}" class="btn btn-success" role="button">Checkout</a>
     </div>
 </div>
 

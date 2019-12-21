@@ -22,6 +22,7 @@ from profiles import urls as urls_profiles
 from paintings import urls as urls_paintings
 from artists import urls as urls_artists
 from cart import urls as urls_cart
+from checkout import urls as urls_checkout
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -30,6 +31,7 @@ urlpatterns = [
     url(r'^paintings/', include(urls_paintings)),
     url(r'^artists/', include(urls_artists)),
     url(r'^cart/', include(urls_cart)),
+    url(r'^checkout/', include(urls_checkout)),
 ]
 
 if settings.DEBUG:

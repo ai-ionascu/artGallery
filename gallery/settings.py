@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'paintings',
     'artists',
     'cart',
+    'checkout',
     'stripe',
     'django_cleanup',
 ]
