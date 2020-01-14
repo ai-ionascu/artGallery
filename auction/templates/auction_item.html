@@ -1,0 +1,18 @@
+<br>
+    <div class="col-10 offset-1 offset-sm-0 col-sm-6 col-md-4 card m-2">
+        <h3><a href="{% url 'artist_detail' id=auction.painting.artist.id %}">{{ auction.painting.artist }}</a></h3>
+        <h5><a href="{% url 'paintings' %}{{ auction.painting.id }}">{{ auction.painting.name }}</a></h5>
+        {% if auction.painting.image %}
+        <a href="{% url 'paintings' %}{{ auction.painting.id }}">
+            <div style="background: url({{ auction.painting.image.url }}) center/contain no-repeat; height:250px;"></div>
+        </a>
+        {% endif %}
+            <div class="d-flex"><span>Current Bid: <strong>xxx</strong></span></div>
+            <div class="d-flex">Seller:<span> {{auction.seller}} </span></div>
+        {% if auction.is_active %}
+            <p>Live</p>
+        {% else %}
+            <p>Completed</p>
+        {% endif %}
+    </div>
+<br>
