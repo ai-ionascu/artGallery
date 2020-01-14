@@ -27,7 +27,7 @@
 
 {% block page_content %}
 
-<form method = 'POST' id='payment-form'>
+<form method = 'POST' id='payment-form' enctype="multipart/form-data">
 
     {% csrf_token %}
     
