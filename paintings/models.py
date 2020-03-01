@@ -38,7 +38,7 @@ class Painting(OwnerMixin, models.Model):
     year = models.IntegerField()
     SIZE_CHOICES = (('', '---------'), ('SMALL', 'Small'), ('MEDIUM', 'Medium'), ('LARGE', 'Large'))
     size = models.CharField(max_length=24, choices=SIZE_CHOICES, default='')
-    price = models.DecimalField(max_digits=24, decimal_places=2)
+    price = models.IntegerField()
     availability = models.BooleanField()
 
     def __str__(self):

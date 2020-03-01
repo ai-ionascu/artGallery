@@ -5,6 +5,7 @@ import datetime
 from django.forms import widgets
 from django.forms import SplitDateTimeWidget
 from django.utils.safestring import mark_safe
+from django.core.exceptions import ValidationError
 
 
 
@@ -13,9 +14,9 @@ class DurationSelectWidget(forms.widgets.MultiWidget):
     template_name = 'select.html'
 
     def __init__(self, attrs=None):
-        days = ((day, day) for day in (1,3,7,14,21,30))
-        hours = ((hour, hour) for hour in range(6,24+1,6))
-        minutes = ((minute, minute) for minute in range(10,50+1,10))
+        days = ((day, day) for day in (0,1,3,7,14,21,30))
+        hours = ((hour, hour) for hour in range(0,24+1,6))
+        minutes = ((minute, minute) for minute in range(1,50+1,10))
         _widgets = (
             widgets.Select(attrs={'time':'days'}, choices=days),
             widgets.Select(attrs={'time':'hours'}, choices=hours),
@@ -48,17 +49,9 @@ class DurationSelectWidget(forms.widgets.MultiWidget):
 
 class AuctionForm(forms.ModelForm):
 
-    # DAYS_CHOICES = [(i, i) for i in range(1, 10+1)]
-    # HOURS_CHOICES = [(i, i) for i in range(1, 24)]
-    # MINUTES_CHOICES = [(i, i) for i in range(1, 60)]
-
-    # days = forms.ChoiceField(label='Days', choices=DAYS_CHOICES, required=False)
-    # hours = forms.ChoiceField(label='Hours', choices=HOURS_CHOICES, required=False)
-    # minutes = forms.ChoiceField(label='Minutes', choices=MINUTES_CHOICES, required=False)
-
     class Meta:
         model = Auction
-        fields = ('painting', 'start_price', 'increment', 'duration',  'is_active')
+        fields = ('painting', 'start_price', 'increment', 'duration')
 
     def __init__(self, *args, **kwargs):
         
@@ -66,6 +59,24 @@ class AuctionForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields['painting'] = forms.ModelChoiceField(queryset=(Painting.objects.filter(owner=self.request.user)))
-        self.fields['duration'].widget = DurationSelectWidget()
+        self.fields['duration'].widget = DurationSelectWidget()      
 
-    
+class BidForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        self.auction = kwargs.pop('auction')
+        super().__init__(*args, **kwargs)
+
+    class Meta:
+        model = Bid
+        fields=('bid',)
+        widgets = {'bid': forms.NumberInput(attrs={'step':'100'})}
+
+    def clean(self):
+
+        new_bid = self.cleaned_data.get('bid')
+        bid_minimum = self.auction.current_price + self.auction.increment
+        print(bid_minimum)
+        if new_bid:
+            if new_bid < bid_minimum:
+                raise ValidationError('You cannot bid less than %d' % bid_minimum)

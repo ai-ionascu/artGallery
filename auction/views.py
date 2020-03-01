@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Auction
+from .models import Auction, Bid
 from paintings.models import Painting
-from .forms import AuctionForm
+from .forms import AuctionForm, BidForm
 import datetime
+from django.core.exceptions import ValidationError
 
 # Create your views here.
 
@@ -31,13 +32,21 @@ def start_auction_view(request):
 def list_auctions_view(request, seller=None):
 
     auctions_list = Auction.objects.all()
-
     if request.user.is_authenticated() and seller == request.user:
         own_auctions_list = Auction.objects.filter(seller=request.user)
         return render(request,  'auctions_list.html', {'own_auctions': own_auctions_list, 'seller': seller})
-
+    
     return render(request,  'auctions_list.html', {'auctions': auctions_list, 'seller': seller})
 
 def detail_auction_view(request, id=None):
     auction = get_object_or_404(Auction, id=id)
-    return render(request, 'auction_detail.html', {'auction': auction})
+    if request.POST:
+        bid_form = BidForm(request.POST, auction=auction)
+        if bid_form.is_valid():
+            bid = bid_form.save()
+            bid.bidder = request.user
+            bid.auction = auction
+            bid.save()
+    else:
+        bid_form = BidForm(auction=auction)    
+    return render(request, 'auction_detail.html', {'auction': auction, 'bid_form': bid_form})

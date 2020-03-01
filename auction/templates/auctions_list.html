@@ -14,7 +14,7 @@
 
 {% if seller %}
     {% for oa in own_auctions %}        
-        <h3>{{ oa.painting.name }}</h3>
+        <!-- <h3>{{ oa.painting.name }}</h3> -->
         <div class="container-fluid">
             <div class="row">
                 {% include 'auction_item.html' with auction=oa %}
@@ -25,7 +25,7 @@
     {% endfor %}
 {% else %}
     {% for a in auctions %}
-        <h3>{{ a.painting.name }}</h3>
+        <!-- <h3>{{ a.painting.name }}</h3> -->
         <div class="container-fluid">
             <div class="row">
                 {% include 'auction_item.html' with auction=a %}

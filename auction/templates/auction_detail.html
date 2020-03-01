@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% load bootstrap_tags %}
+
+{% block page_title %}Auction Page{% endblock %}
+
+{% block page_heading %}
+<br>
+    <div class="container m-auto">
+        <h3>{{ auction.painting.name }} - Auction Details</h3>
+        <h5><a href="{% url 'artist_detail' id=auction.painting.artist.id %}">{{ auction.painting.artist }}</a></h5>
+    </div>
+{% endblock %}
+
+{% block page_content %}
+<br>
+    <div class='mx-auto mb-4 container'>
+        <div class="mb-4">
+            <img src="{{ auction.painting.image.url }}" alt="{{ auction.painting.name }}" max-width="200" height="500"/>
+        </div>
+        <p>Description: {{ auction.painting.description }}</p>
+        <p>Year: {{ auction.painting.year }}</p>
+        <div class='d-flex'>
+                <p>Subject:</p>
+                <ul>
+                {% for value in auction.painting.get_subject_values %}
+                    <li> {{ value }} </li>   
+                {% endfor %}
+                </ul>
+            </div>
+        <p>Trend: {{ auction.painting.trend }}</p>
+        <p>Media: {{ auction.painting.media }}</p>
+        <p>Size: {{ auction.painting.size.capitalize }}</p>
+        {% if auction.painting.availability %}
+            <p>Available</p>
+        {% else %}
+            <p>Out of Stock</p>
+        {% endif %}
+
+        {% if auction.is_active %}
+            <p>Current Bid Price: {{ auction.current_price }}</p>
+            <div class="d-flex justify-content-start">
+                {% include 'place_bid.html' with auction=auction %}
+            </div>
+            <p>-Or-</p>
+            <div class="d-flex justify-content-start">Price: {{ auction.painting.price }}
+                <span><a type='button' class='btn btn-primary' href="#">Buy now</a></span>
+            </div>
+            <br>
+        {% elif auction.winner_price %}
+            <div class="d-flex justify-content-start">
+                Item sold for: {{ auction.winner_price }}
+            </div>
+            <div class="d-flex justify-content-start">
+                Auction winner: {{ auction.winner }}
+            </div>
+        {% else %}
+        <div class="d-flex justify-content-start">
+            <p>The highest bid {{ auction.current_price }} did not reach the minimum selling price.</p> 
+        </div>
+        {% endif %}
+        <div>
+            {% if auction.time_left %}
+            <div>Time left: {{ auction.time_left }}</div>
+            {% else %} Auction Time Expired
+            {% endif %}
+        </div>
+        <br>
+        <div>
+            <a type='button' class='btn btn-primary' href="{% url 'auctions' %}">Return to Auctions</a>
+        </div>
+{% endblock %}

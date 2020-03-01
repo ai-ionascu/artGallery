@@ -1,0 +1,15 @@
+<div class="row">
+    <form method="POST" id="place_bid">
+        <!-- <input type="hidden" name="auction_id" id="auction_id" value="{{ auction.id }}"> -->
+        <div>
+        {% csrf_token %}
+        {% for field in bid_form.visible_fields %}
+        {% for err in bid_form.non_field_errors %}
+            {{ field }}
+            {{ err }}
+            {% endfor %}
+        {% endfor %}
+        <span><button type="submit" class='btn btn-primary'><i class="fas fa-gavel"></i> Place Bid </button></span>
+    </div>    
+    </form>
+</div>

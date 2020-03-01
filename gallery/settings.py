@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'auction',
     'stripe',
     'django_cleanup',
+    'apscheduler',
 ]
 
 MIDDLEWARE = [
