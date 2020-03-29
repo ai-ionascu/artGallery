@@ -5,36 +5,43 @@
 {% block page_title %}Auctions Page{% endblock %}
 
 {% block page_heading %}
-{% if seller %}My Auctions
-{% else %}Auctions List
+{% if identifier %}My Auctions
+{% elif 'live' in request.path %}Live Auctions
+{% else %} Auctions List
 {% endif %}
 {% endblock %}
 
 {% block page_content %}
-
-{% if seller %}
+{% if identifier %}
     {% for oa in own_auctions %}        
-        <!-- <h3>{{ oa.painting.name }}</h3> -->
         <div class="container-fluid">
             <div class="row">
                 {% include 'auction_item.html' with auction=oa %}
             </div>
         </div>
     {% empty %}
-        <p>You don't have any open auction yet.</p>
+        <p>You don't have any auction yet.</p>
+    {% endfor %}
+{% elif 'live' in request.path %}
+    {% for la in live_auctions %}
+    <div class="container-fluid">
+        <div class="row">
+            {% include 'auction_item.html' with auction=la %}
+        </div>
+    </div>
+    {% empty %}
+    <p>There are no live auctions.</p>
     {% endfor %}
 {% else %}
     {% for a in auctions %}
-        <!-- <h3>{{ a.painting.name }}</h3> -->
         <div class="container-fluid">
             <div class="row">
                 {% include 'auction_item.html' with auction=a %}
             </div>
         </div>
     {% empty %}
-        <p>There are no live auctions.</p>
+        <p>There are no recorded auctions.</p>
     {% endfor %}    
 {% endif %}
-
 
 {% endblock %}

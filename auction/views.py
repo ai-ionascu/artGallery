@@ -29,14 +29,18 @@ def start_auction_view(request):
 
     return render (request, 'start_auction.html', {'auction_form' : auction_form})
 
-def list_auctions_view(request, seller=None):
+def list_auctions_view(request, identifier=None):
 
+    context = {}
     auctions_list = Auction.objects.all()
-    if request.user.is_authenticated() and seller == request.user:
+    live_auctions = [obj for obj in auctions_list if obj.is_active]
+    context['auctions'] = auctions_list
+    context['live_auctions'] = live_auctions
+    if request.user.is_authenticated():
         own_auctions_list = Auction.objects.filter(seller=request.user)
-        return render(request,  'auctions_list.html', {'own_auctions': own_auctions_list, 'seller': seller})
+        context['own_auctions'] = own_auctions_list
     
-    return render(request,  'auctions_list.html', {'auctions': auctions_list, 'seller': seller})
+    return render(request,  'auctions_list.html', context)
 
 def detail_auction_view(request, id=None):
     auction = get_object_or_404(Auction, id=id)
