@@ -6,6 +6,8 @@
         <a href="{% url 'paintings' %}{{ painting.id }}">
             <div style="background: url({{ painting.image.url }}) center/contain no-repeat; height:250px;"></div>
         </a>
+        <p>{{ painting.text|linebreaksbr }}</p>
+        <a href="{% url 'painting_detail' id=painting.id %}">Comments: {{ painting.comments.count }}</a>
         {% endif %}
             <div class="d-flex">Price:<span> {{ painting.price }}</span></div>
         {% if painting.availability %}

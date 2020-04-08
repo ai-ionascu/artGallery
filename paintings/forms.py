@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import widgets
 from django.contrib.auth.models import User
-from paintings.models import Painting, Subject, Trend, Media
+from .models import Painting, Subject, Trend, Media, Comment, Like
 from artists.models import Artist
 from django.core.validators import ValidationError
 from django.utils.safestring import mark_safe
@@ -164,3 +164,10 @@ class DeletePainting(forms.ModelForm):
         model = Painting
         fields = ('name',) 
         widgets = {'name': forms.HiddenInput()}
+
+class CommentForm(forms.ModelForm):
+
+    class Meta:
+        model = Comment
+        fields = ('comment',) 
+        widgets = {'comment': forms.Textarea(attrs={'rows':5, 'cols':50})}

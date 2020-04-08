@@ -51,3 +51,22 @@ class Painting(OwnerMixin, models.Model):
             result.append(subj.subject)
 
         return result
+
+class Comment(models.Model):
+
+    painting = models.ForeignKey(Painting, related_name='comments', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name='users_comments')
+    comment = models.TextField(max_length=400, blank=False, null=False)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return (self.comment)[:30]
+
+class Like(models.Model):
+
+    painting = models.OneToOneField(Painting, related_name='likes', on_delete=models.CASCADE)
+    users = models.ManyToManyField(User, related_name='users_likes')
+
+    def __str__(self):
+        return self.painting.name

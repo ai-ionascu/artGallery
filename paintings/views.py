@@ -2,10 +2,10 @@ from django.shortcuts import render, reverse, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Painting, Subject, Trend, Media
+from .models import Painting, Subject, Trend, Media, Comment, Like
 from artists.models import Artist
 from checkout.models import OrderLineItem
-from .forms import NewPainting, EditPainting, DeletePainting
+from .forms import NewPainting, EditPainting, DeletePainting, CommentForm
 from django.apps import apps
 from django.db.models import Count
 
@@ -39,7 +39,9 @@ def list_paintings_view(request, item=None, id=None, string=''):
 
 def detail_paintings_view(request, id=None):
     painting = get_object_or_404(Painting, id=id)
-    return render(request, 'painting_detail.html', {'painting': painting})
+    comment_form = CommentForm()
+
+    return render(request, 'painting_detail.html', {'painting': painting, 'form': comment_form})
 
 @login_required
 def add_painting_view(request):
@@ -132,3 +134,18 @@ def delete_painting_view(request, id):
             messages.error(request, "You are not allowed to delete this item.")
           
     return render(request, 'delete_painting.html', {'painting': painting})
+
+def add_comment_view(request, id):
+        painting = get_object_or_404(Painting, id=id)
+        if request.POST:
+            comment_form = CommentForm(request.POST)
+            if comment_form.is_valid():
+                comment = comment_form.save(commit=False)
+                comment.painting = painting
+                comment.user = request.user
+                comment.save()
+                print('pula mea')
+        return redirect(reverse('paintings'))
+
+def like_painting_view(request):
+    return

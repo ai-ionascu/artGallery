@@ -46,11 +46,26 @@
                         <button class="btn btn-success" type="submit">Add</button>
                         </span>
             </div>
-            <!-- /input-group -->
-
         </form>
 
+        <hr>
+        <form method="post" action="{% url 'add_comment' id=painting.id %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn btn-success" type="submit">Add Comment</button>
+        </form>
         <br>
+        {% for comment in painting.comments.all %}
+            <div class="comment">
+                <div class="date">{{ comment.created }}</div>
+                <strong>{{ comment.user }}</strong>
+                <p>{{ comment.comment|linebreaks }}</p>
+            </div>
+            <hr>
+        {% empty %}
+            <p>No comments added.</p>
+        {% endfor %}
+
         <div>
             <a type='button' class='btn btn-primary' href="{% url 'paintings' %}">Return to Gallery</a>
         </div>

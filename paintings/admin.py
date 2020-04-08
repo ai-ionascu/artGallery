@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Painting, Subject, Trend, Media
+from .models import Painting, Subject, Trend, Media, Comment, Like
 from django.utils.html import format_html
 from django.contrib.admin.sites import AlreadyRegistered
 
@@ -26,9 +26,6 @@ class PaintingAdmin(admin.ModelAdmin):
     list_display = ['name', 'artist', 'image_tag', 'owner', ]
 
 admin.site.register(Painting, PaintingAdmin)
-# admin.site.register(Trend)
-# admin.site.register(Media)
-# admin.site.register(Subject)
 
 for m in [Subject, Trend, Media]:
     class m_admin(admin.ModelAdmin): 
@@ -44,3 +41,5 @@ for m in [Subject, Trend, Media]:
     except AlreadyRegistered:
         pass 
       
+admin.site.register(Comment)
+admin.site.register(Like)
