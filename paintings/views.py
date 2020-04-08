@@ -145,7 +145,18 @@ def add_comment_view(request, id):
                 comment.user = request.user
                 comment.save()
                 print('pula mea')
-        return redirect(reverse('paintings'))
+        return redirect(reverse('painting_detail', kwargs={'id':painting.id}))
 
-def like_painting_view(request):
-    return
+def like_painting_view(request, id):
+    painting = get_object_or_404(Painting, id=id)
+
+    try:
+        painting.likes
+    except Painting.likes.RelatedObjectDoesNotExist:
+        Like.objects.create(painting=painting)
+
+    if request.user in painting.likes.users.all():
+        painting.likes.users.remove(request.user)
+    else:
+        painting.likes.users.add(request.user)
+    return redirect(reverse('painting_detail', kwargs={'id':painting.id}))

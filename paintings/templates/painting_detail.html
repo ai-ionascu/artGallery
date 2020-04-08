@@ -43,12 +43,18 @@
             <div class="input-group">
                 <input name='quantity' type="number" min="1" max="2" class="form-control" placeholder="Quantity">
                 <span class="input-group-btn">
-                        <button class="btn btn-success" type="submit">Add</button>
-                        </span>
+                    <button class="btn btn-success" type="submit">Add</button>
+                </span>
             </div>
         </form>
-
-        <hr>
+        <br>
+        {% if request.user in painting.likes.users.all %}
+        <a href="{% url 'like_painting' id=painting.id %}">Unlike this painting</a>
+        {% else %}
+        <a href="{% url 'like_painting' id=painting.id %}">Like this painting</a>
+        {% endif %}
+        <br>
+        <br>
         <form method="post" action="{% url 'add_comment' id=painting.id %}">
             {% csrf_token %}
             {{ form.as_p }}
