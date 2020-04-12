@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'stripe',
     'django_cleanup',
     'apscheduler',
+    'star_ratings',
 ]
 
 MIDDLEWARE = [
@@ -147,3 +148,5 @@ EMAIL_PORT=587
 EMAIL_USE_TLS=True
 EMAIL_HOST_USER="ionutionascu27@gmail.com"
 EMAIL_HOST_PASSWORD=os.environ.get('EMAIL_HOST_PASSWORD')
+
+STAR_RATINGS_RERATE = False

@@ -34,6 +34,7 @@ urlpatterns = [
     url(r'^cart/', include(urls_cart)),
     url(r'^checkout/', include(urls_checkout)),
     url(r'^auctions/', include(urls_auction)),
+    url(r'^ratings/', include('star_ratings.urls', namespace='ratings')),
 ]
 
 if settings.DEBUG:
