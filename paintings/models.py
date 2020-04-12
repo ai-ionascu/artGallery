@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.fields import GenericRelation
 from django.conf import settings
 from artists.models import Artist
+from generic_models.models import Comment
 from home.models import OwnerMixin
 
 # Create your models here.
@@ -40,6 +42,7 @@ class Painting(OwnerMixin, models.Model):
     size = models.CharField(max_length=24, choices=SIZE_CHOICES, default='')
     price = models.IntegerField()
     availability = models.BooleanField()
+    comments = GenericRelation(Comment)
 
     def __str__(self):
         return self.name
@@ -51,17 +54,6 @@ class Painting(OwnerMixin, models.Model):
             result.append(subj.subject)
 
         return result
-
-class Comment(models.Model):
-
-    painting = models.ForeignKey(Painting, related_name='comments', on_delete=models.CASCADE)
-    user = models.ForeignKey(User, related_name='users_comments')
-    comment = models.TextField(max_length=400, blank=False, null=False)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return (self.comment)[:30]
 
 class Like(models.Model):
 

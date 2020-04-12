@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django_cleanup',
     'apscheduler',
     'star_ratings',
+    'generic_models',
 ]
 
 MIDDLEWARE = [

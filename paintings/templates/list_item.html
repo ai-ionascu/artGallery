@@ -8,7 +8,7 @@
         </a>
         <p>{{ painting.text|linebreaksbr }}</p>
         <div>
-            <a href="{% url 'painting_detail' id=painting.id %}">Comments: {{ painting.comments.count }}</a>
+            <a href="{% url 'painting_detail' id=painting.id %}">Comments: {{ painting.comments.all.count }}</a>
             <span>
                 <a href="{% url 'painting_detail' id=painting.id %}">Likes: {{ painting.likes.users.count }}</a></span>
         </div>

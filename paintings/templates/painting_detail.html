@@ -64,7 +64,7 @@
         {% for comment in painting.comments.all %}
             <div class="comment">
                 <div class="date">{{ comment.created }}</div>
-                <strong>{{ comment.user }}</strong>
+                <strong>{{ comment.author }}</strong>
                 <p>{{ comment.comment|linebreaks }}</p>
             </div>
             <hr>

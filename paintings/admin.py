@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Painting, Subject, Trend, Media, Comment, Like
+from .models import Painting, Subject, Trend, Media, Like
 from django.utils.html import format_html
 from django.contrib.admin.sites import AlreadyRegistered
 
@@ -41,5 +41,4 @@ for m in [Subject, Trend, Media]:
     except AlreadyRegistered:
         pass 
       
-admin.site.register(Comment)
 admin.site.register(Like)

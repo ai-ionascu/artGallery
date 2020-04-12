@@ -2,7 +2,8 @@ from django.shortcuts import render, reverse, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Painting, Subject, Trend, Media, Comment, Like
+from .models import Painting, Subject, Trend, Media, Like
+from generic_models.models import Comment
 from artists.models import Artist
 from checkout.models import OrderLineItem
 from .forms import NewPainting, EditPainting, DeletePainting, CommentForm
@@ -141,10 +142,9 @@ def add_comment_view(request, id):
             comment_form = CommentForm(request.POST)
             if comment_form.is_valid():
                 comment = comment_form.save(commit=False)
-                comment.painting = painting
-                comment.user = request.user
+                comment.content_object = painting
+                comment.author = request.user
                 comment.save()
-                print('pula mea')
         return redirect(reverse('painting_detail', kwargs={'id':painting.id}))
 
 def like_painting_view(request, id):
