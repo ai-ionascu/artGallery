@@ -47,7 +47,7 @@ def detail_auction_view(request, id=None):
     if request.POST:
         bid_form = BidForm(request.POST, auction=auction)
         if bid_form.is_valid():
-            bid = bid_form.save()
+            bid = bid_form.save(commit=False)
             bid.bidder = request.user
             bid.auction = auction
             bid.save()

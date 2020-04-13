@@ -51,7 +51,7 @@ class AuctionForm(forms.ModelForm):
 
     class Meta:
         model = Auction
-        fields = ('painting', 'start_price', 'increment', 'duration')
+        fields = ('painting', 'start_price', 'increment', 'duration', 'min_price', 'buy_price')
 
     def __init__(self, *args, **kwargs):
         
@@ -75,8 +75,7 @@ class BidForm(forms.ModelForm):
     def clean(self):
 
         new_bid = self.cleaned_data.get('bid')
-        bid_minimum = self.auction.current_price + self.auction.increment
-        print(bid_minimum)
+        bid_minimum = self.auction.get_bids[0].bid + self.auction.increment if self.auction.get_bids else self.auction.current_price
         if new_bid:
             if new_bid < bid_minimum:
                 raise ValidationError('You cannot bid less than %d' % bid_minimum)

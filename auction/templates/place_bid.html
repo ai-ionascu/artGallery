@@ -4,10 +4,10 @@
         <div>
         {% csrf_token %}
         {% for field in bid_form.visible_fields %}
-        {% for err in bid_form.non_field_errors %}
             {{ field }}
-            {{ err }}
-            {% endfor %}
+        {% endfor %}
+        {% for err in bid_form.non_field_errors %}
+            {{ err }}   
         {% endfor %}
         <span><button type="submit" class='btn btn-primary'><i class="fas fa-gavel"></i> Place Bid </button></span>
     </div>    

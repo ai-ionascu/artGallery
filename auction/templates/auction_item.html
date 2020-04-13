@@ -1,24 +1,36 @@
-<br>
-    <div class="col-10 offset-1 offset-sm-0 col-sm-6 col-md-4 card m-2">
-        <h3><a href="{% url 'artist_detail' id=auction.painting.artist.id %}">{{ auction.painting.artist }}</a></h3>
-        <h5><a href="{% url 'auction_detail' id=auction.id %}">{{ auction.painting.name }} - Open Auction</a></h5>
-        {% if auction.painting.image %}
-        <a href="{% url 'auction_detail' id=auction.id %}">
-            <div style="background: url({{ auction.painting.image.url }}) center/contain no-repeat; height:250px;"></div>
+<div class="col-10 offset-1 offset-sm-0 col-sm-6 col-md-3 card m-2">
+    <h3><a href="{% url 'artist_detail' id=auction.painting.artist.id %}"><strong>{{ auction.painting.artist }}</strong>
         </a>
-        {% endif %}
-            <div class="container-fluid my-2">
-                <div class="row">
-                    <span>Current Bid Price: <strong>{{ auction.current_price }}</strong></span>
-                </div>
-                <div>{{ auction.bid_set.count }} bids</div>
-                <div>Time left: </div>                  
+    </h3>
+    <h5><span>Author:
+        </span>
+        <a href="{% url 'auction_detail' id=auction.id %}">
+            {{ auction.painting.name }}
+        </a>
+    </h5>
+    {% if auction.is_active %}
+        <h6>Open Auction</h6>
+    {% else %}
+        <h6>Auction Expired</h6>
+    {% endif %}
+    {% if auction.painting.image %}
+    <a href="{% url 'auction_detail' id=auction.id %}">
+        <div style="background: url({{ auction.painting.image.url }}) center/contain no-repeat; height:250px;"></div>
+    </a>
+    {% endif %}
+        <div class="container-fluid my-2">
+            <div class="row">
+                <span>Current Bid Price: <strong>{{ auction.current_price }}</strong></span>
             </div>
-            <div class="d-flex"><span>Seller: <strong>{{auction.seller}}</strong></span></div>
-        {% if auction.is_active %}
-            <p>Live <i class="fas fa-circle" style="color: #42e467;"></i></p>
-        {% else %}
-            <p>Completed</p>
-        {% endif %}
-    </div>
-<br>
+            <div>{{ auction.bid_set.count }} bids</div>
+            {% if auction.is_active %}
+            <div>Time left: {{ auction.time_left }} </div>
+            {% endif %}                  
+        </div>
+        <div class="d-flex"><span>Seller: <strong>{{auction.seller}}</strong></span></div>
+    {% if auction.is_active %}
+        <p>Live <i class="fas fa-circle" style="color: #42e467;"></i></p>
+    {% else %}
+        <p>Completed</p>
+    {% endif %}
+</div>

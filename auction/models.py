@@ -9,10 +9,16 @@ from apscheduler.schedulers.background import BackgroundScheduler
 # Create your models here.
 
 class Auction(models.Model):
-    seller = models.ForeignKey(User, related_name='Seller')
-    painting = models.ForeignKey(Painting)
+    seller = models.ForeignKey(User, related_name='seller')
+    painting = models.ForeignKey(Painting, related_name='painting')
     start_price = models.IntegerField()
     increment = models.IntegerField()
+    min_price = models.IntegerField(blank=True, null=True)
+    buy_price = models.IntegerField(blank=True, null=True)
+    winner_price = models.IntegerField(blank=True, null=True)
+    winner = models.ForeignKey(User, related_name='Winner', blank=True, null=True)
+    start_date = models.DateTimeField()
+    duration = models.DurationField()
 
     @property
     def current_price(self):
@@ -38,6 +44,10 @@ class Auction(models.Model):
         return price
 
     @property
+    def get_bids(self):
+        return self.bid_set.order_by('-bid')
+
+    @property
     def time_left(self):
 
         start_date = self.start_date
@@ -51,11 +61,6 @@ class Auction(models.Model):
             seconds = ((total_seconds % 86400) % 3600) % 60
 
             return '{} days, {} hours, {} minutes, {} seconds'.format(days, hours, minutes, seconds)
-
-    winner_price = models.IntegerField(blank=True, null=True)
-    winner = models.ForeignKey(User, related_name='Winner', blank=True, null=True)
-    start_date = models.DateTimeField()
-    duration = models.DurationField()
 
     @property
     def is_active(self):

@@ -44,7 +44,7 @@
             </div>
             <p>-Or-</p>
             <div class="d-flex justify-content-start">Price: {{ auction.painting.price }}
-                <span><a type='button' class='btn btn-primary' href="#">Buy now</a></span>
+                <span><a type='button' class='btn btn-primary' href="{% url 'checkout' %}">Buy now</a></span>
             </div>
             <br>
         {% elif auction.winner_price %}

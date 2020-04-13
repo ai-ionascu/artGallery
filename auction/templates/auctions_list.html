@@ -13,35 +13,35 @@
 
 {% block page_content %}
 {% if identifier %}
-    {% for oa in own_auctions %}        
-        <div class="container-fluid">
-            <div class="row">
-                {% include 'auction_item.html' with auction=oa %}
-            </div>
-        </div>
-    {% empty %}
-        <p>You don't have any auction yet.</p>
-    {% endfor %}
-{% elif 'live' in request.path %}
-    {% for la in live_auctions %}
     <div class="container-fluid">
         <div class="row">
-            {% include 'auction_item.html' with auction=la %}
+            {% for oa in own_auctions %}        
+            {% include 'auction_item.html' with auction=oa %}
+            {% empty %}
+                <p>You don't have any auction yet.</p>
+            {% endfor %}
         </div>
     </div>
-    {% empty %}
-    <p>There are no live auctions.</p>
-    {% endfor %}
-{% else %}
-    {% for a in auctions %}
-        <div class="container-fluid">
-            <div class="row">
-                {% include 'auction_item.html' with auction=a %}
-            </div>
+{% elif 'live' in request.path %}
+    <div class="container-fluid">
+        <div class="row">
+            {% for la in live_auctions %}
+            {% include 'auction_item.html' with auction=la %}
+            {% empty %}
+                <p>There are no live auctions.</p>
+            {% endfor %}
         </div>
-    {% empty %}
-        <p>There are no recorded auctions.</p>
-    {% endfor %}    
+    </div>
+{% else %}
+    <div class="container-fluid">
+        <div class="row">
+            {% for a in auctions %}
+            {% include 'auction_item.html' with auction=a %}
+            {% empty %}
+                <p>There are no recorded auctions.</p>
+            {% endfor %}
+        </div>
+    </div>    
 {% endif %}
 
 {% endblock %}
