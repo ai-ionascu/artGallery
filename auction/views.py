@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.utils.timezone import utc
 from .models import Auction, Bid
 from paintings.models import Painting
 from .forms import AuctionForm, BidForm
@@ -18,7 +19,7 @@ def start_auction_view(request):
         if auction_form.is_valid():
             auction = auction_form.save(commit=False)
             auction.seller = request.user
-            auction.start_date = datetime.datetime.now()
+            auction.start_date = datetime.datetime.utcnow().replace(tzinfo=utc)
             auction.save()
             messages.success(request,'An auction for your painting has been successfully created.')
             return redirect(reverse('index'))

@@ -31,32 +31,33 @@
         <p>Trend: {{ auction.painting.trend }}</p>
         <p>Media: {{ auction.painting.media }}</p>
         <p>Size: {{ auction.painting.size.capitalize }}</p>
-        {% if auction.painting.availability %}
-            <p>Available</p>
-        {% else %}
-            <p>Out of Stock</p>
-        {% endif %}
-
+        <hr>
         {% if auction.is_active %}
             <p>Current Bid Price: {{ auction.current_price }}</p>
             <div class="d-flex justify-content-start">
                 {% include 'place_bid.html' with auction=auction %}
             </div>
+            {% if auction.buy_price %}
             <p>-Or-</p>
-            <div class="d-flex justify-content-start">Price: {{ auction.painting.price }}
+            <div class="d-flex justify-content-start">Price: {{ auction.painting.buy_price }}
                 <span><a type='button' class='btn btn-primary' href="{% url 'checkout' %}">Buy now</a></span>
             </div>
             <br>
-        {% elif auction.winner_price %}
+            {% endif %}
+        {% elif auction.bid_set.count > 0 and auction.winner_price %}
             <div class="d-flex justify-content-start">
                 Item sold for: {{ auction.winner_price }}
             </div>
             <div class="d-flex justify-content-start">
                 Auction winner: {{ auction.winner }}
-            </div>
+            </div>  
+        {% elif auction.bid_set.count > 0 %}
+        <div class="d-flex justify-content-start">
+            <p>The highest bid {{ auction.bid_set.all.0.bid }} did not reach the minimum selling price.</p> 
+        </div>
         {% else %}
         <div class="d-flex justify-content-start">
-            <p>The highest bid {{ auction.current_price }} did not reach the minimum selling price.</p> 
+            <p>No bids.</p> 
         </div>
         {% endif %}
         <div>

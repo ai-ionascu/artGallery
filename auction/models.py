@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from paintings.models import Painting
 from django.core.exceptions import ValidationError
 import datetime
+import pytz
 from .scheduler import declare_winner
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -65,12 +66,14 @@ class Auction(models.Model):
     @property
     def is_active(self):
         end_date = self.start_date + self.duration
-        return end_date >= datetime.datetime.now(datetime.timezone.utc)
+        return end_date.replace(tzinfo=pytz.UTC) >= datetime.datetime.now(datetime.timezone.utc)
     
     def __str__(self):
         return "%s sold by %s" %(self.painting, self.seller)
 
     def save(self, *args, **kwargs):
+        if self.min_price is None:
+            self.min_price = self.start_price
         if self._state.adding == True:
             end_date = self.start_date + self.duration
             scheduler = BackgroundScheduler()
@@ -83,6 +86,9 @@ class Bid(models.Model):
     auction = models.ForeignKey(Auction, on_delete=models.CASCADE)
     bidder = models.ForeignKey(User, related_name="bidder", blank=True, null=True)
     bid = models.IntegerField()
+
+    class Meta:
+        ordering = ['-bid']
 
     def __str__(self):
         return "%s, bid ammount %s, for the auction: %s" %(self.bidder, self.bid, self.auction)
