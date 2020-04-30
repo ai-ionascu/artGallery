@@ -22,26 +22,40 @@
 {% block page_content %}
 <div class="container-fluid">
 <div class="row justify-content-start">
-    {% for item in cart_items %}
-    
+    {% if auction %}
     <div class="card col-10 offset-1 offset-sm-0 col-sm-6 col-md-4 m-2">
-        <div style="background: url({{ item.painting.image.url }}) center/contain no-repeat; height:250px;"></div>
-        <h5 class="card-title">{{ item.painting.name }}</h5>
+        <div style="background: url({{ auction.painting.image.url }}) center/contain no-repeat; height:250px;"></div>
+        <h5 class="card-title">{{ auction.painting.name }}</h5>
         <div class="d-flex justify-content-between">
-            <div class="d-flex">Price:<span> {{ item.painting.price }}</span></div>
-            <div class="d-flex">Qty:<span> {{item.quantity}}</span></div>
+            <div class="d-flex">Price:<span> {{ auction.winner_price }}</span></div>
+            <div class="d-flex">Qty:<span> {{painting.quantity}}</span></div>
         </div>
     </div>
-
-    {% endfor %}
+    {% else %}
+        {% for item in cart_items %}
+        
+        <div class="card col-10 offset-1 offset-sm-0 col-sm-6 col-md-4 m-2">
+            <div style="background: url({{ item.painting.image.url }}) center/contain no-repeat; height:250px;"></div>
+            <h5 class="card-title">{{ item.painting.name }}</h5>
+            <div class="d-flex justify-content-between">
+                <div class="d-flex">Price:<span> {{ item.painting.price }}</span></div>
+                <div class="d-flex">Qty:<span> {{item.quantity}}</span></div>
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
 </div>
 <div class="row justify-content-start">
     <div class="container-fluid">
+    {% if auction %}
+    <p>Total: <i class="fa fa-euro-sign"></i> {{ auction.winner_price }}</p>
+    {% else %}
     <p>Total: <i class="fa fa-euro-sign"></i> {{ total }}</p>
+    {% endif %}
 </div>
 </div>
 
-<form role="form" method="post" id="payment-form" action="{% url 'checkout' %}">
+<form role="form" method="post" id="payment-form">
     {% csrf_token %}
     <legend>Payment Details</legend>
     <!-- <div id="credit-card-errors" style="display:none">

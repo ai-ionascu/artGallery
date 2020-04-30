@@ -4,14 +4,12 @@ from paintings.models import Painting
 from django.core.exceptions import ValidationError
 import datetime
 import pytz
-from .scheduler import declare_winner
-from apscheduler.schedulers.background import BackgroundScheduler
 
 # Create your models here.
 
 class Auction(models.Model):
     seller = models.ForeignKey(User, related_name='seller')
-    painting = models.ForeignKey(Painting, related_name='painting')
+    painting = models.ForeignKey(Painting, related_name='auctions')
     start_price = models.IntegerField()
     increment = models.IntegerField()
     min_price = models.IntegerField(blank=True, null=True)
@@ -74,11 +72,6 @@ class Auction(models.Model):
     def save(self, *args, **kwargs):
         if self.min_price is None:
             self.min_price = self.start_price
-        if self._state.adding == True:
-            end_date = self.start_date + self.duration
-            scheduler = BackgroundScheduler()
-            scheduler.add_job(declare_winner, 'date', run_date=end_date, args=[self])
-            scheduler.start()
         super().save(*args, **kwargs)
 
 class Bid(models.Model):

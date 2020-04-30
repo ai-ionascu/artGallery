@@ -1,0 +1,11 @@
+{% load custom_tags %}
+{% autoescape off %}
+<h1>Congratulations {{ auction.winner }}!</h1>
+<p>We are pleased to announce you that you are the winner of the auction number {{ auction.id }}
+    for the painting {{ auction.painting.name }} signed by {{ auction.painting.artist }} on our {{ request.get_host }} auction platform.
+</p>
+<p>Please click on the following <a href="{{ request.scheme}}://{{ request.get_host }}{% url 'checkout' auction_id=auction.id %}">Payment Link</a> to finalize the purchase.</p>
+
+Thanks for using our platform!
+
+{% endautoescape %}

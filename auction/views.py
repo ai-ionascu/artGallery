@@ -7,6 +7,8 @@ from paintings.models import Painting
 from .forms import AuctionForm, BidForm
 import datetime
 from django.core.exceptions import ValidationError
+from .scheduler import declare_winner
+from apscheduler.schedulers.background import BackgroundScheduler
 
 # Create your views here.
 
@@ -20,6 +22,10 @@ def start_auction_view(request):
             auction = auction_form.save(commit=False)
             auction.seller = request.user
             auction.start_date = datetime.datetime.utcnow().replace(tzinfo=utc)
+            end_date = auction.start_date + auction.duration
+            scheduler = BackgroundScheduler()
+            scheduler.add_job(declare_winner, 'date', run_date=end_date, args=[request,auction])
+            scheduler.start()
             auction.save()
             messages.success(request,'An auction for your painting has been successfully created.')
             return redirect(reverse('index'))

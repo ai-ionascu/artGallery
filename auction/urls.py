@@ -1,5 +1,5 @@
 from django.conf.urls import url, include
-from auction.views import list_auctions_view, start_auction_view, detail_auction_view
+from auction.views import list_auctions_view, start_auction_view, detail_auction_view, declare_winner
 
 
 urlpatterns = [
