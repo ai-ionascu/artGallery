@@ -1,8 +1,16 @@
 {% extends 'base.html' %}
 
+{% load staticfiles %}
+
 {% load bootstrap_tags %}
 
 {% block page_title %}Auction Page{% endblock %}
+
+{% block js %}
+
+    <script type="text/javascript" src="{% static 'js/ajax.js' %}"></script>
+
+{% endblock %}
 
 {% block page_heading %}
 <br>
@@ -33,9 +41,9 @@
         <p>Size: {{ auction.painting.size.capitalize }}</p>
         <hr>
         {% if auction.is_active %}
-            <p>Current Bid Price: {{ auction.current_price }}</p>
+            <p id='current_price'>Current Bid Price: {{ auction.current_price }}</p>
             <div class="d-flex justify-content-start">
-                {% include 'place_bid.html' with auction=auction %}
+                {% include 'place_bid.html' %}
             </div>
             {% if auction.buy_price %}
             <p>-Or-</p>

@@ -9,6 +9,8 @@ import datetime
 from django.core.exceptions import ValidationError
 from .scheduler import declare_winner
 from apscheduler.schedulers.background import BackgroundScheduler
+from django.http import JsonResponse
+from django.core import serializers
 
 # Create your views here.
 
@@ -51,13 +53,22 @@ def list_auctions_view(request, identifier=None):
 
 def detail_auction_view(request, id=None):
     auction = get_object_or_404(Auction, id=id)
-    if request.POST:
+    bid_form = BidForm(auction=auction)    
+    return render(request, 'auction_detail.html', {'auction': auction, 'bid_form': bid_form})
+
+def place_bid(request, id=None):
+    auction = get_object_or_404(Auction, id=id)
+    if request.is_ajax and request.POST:
         bid_form = BidForm(request.POST, auction=auction)
         if bid_form.is_valid():
             bid = bid_form.save(commit=False)
             bid.bidder = request.user
             bid.auction = auction
             bid.save()
-    else:
-        bid_form = BidForm(auction=auction)    
-    return render(request, 'auction_detail.html', {'auction': auction, 'bid_form': bid_form})
+            current_price = bid.auction.current_price
+
+            ser_bid = serializers.serialize('json', [bid, ])
+            return JsonResponse({'bid': ser_bid, 'current_price':current_price}, status=200)
+        else:
+            return JsonResponse({"error": bid_form.errors}, status=400)
+        return JsonResponse({"error": "error"}, status=400)
