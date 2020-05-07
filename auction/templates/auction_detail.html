@@ -4,13 +4,9 @@
 
 {% load bootstrap_tags %}
 
+{% load custom_tags %}
+
 {% block page_title %}Auction Page{% endblock %}
-
-{% block js %}
-
-    <script type="text/javascript" src="{% static 'js/ajax.js' %}"></script>
-
-{% endblock %}
 
 {% block page_heading %}
 <br>
@@ -45,6 +41,8 @@
             <div class="d-flex justify-content-start">
                 {% include 'place_bid.html' %}
             </div>
+            <p id='alert' style="display: none; color: red;"> {{ message }} </p>
+            <p id='form_err' style="display: none; color: red;"> {{ bid_form.errors }} </p>
             {% if auction.buy_price %}
             <p>-Or-</p>
             <div class="d-flex justify-content-start">Price: {{ auction.painting.buy_price }}
@@ -69,13 +67,25 @@
         </div>
         {% endif %}
         <div>
-            {% if auction.time_left %}
-            <div>Time left: {{ auction.time_left }}</div>
-            {% else %} Auction Time Expired
-            {% endif %}
+            <div id="time_left_{{ auction.id }}" style="color: red;"></div>
         </div>
         <br>
         <div>
             <a type='button' class='btn btn-primary' href="{% url 'auctions' %}">Return to Auctions</a>
         </div>
+{% endblock %}
+
+{% block js %}
+
+    <script type="text/javascript" src="{% static 'js/ajax.js' %}"></script>
+    <script>
+        var auctions = [];
+        auctions.push({
+            pk: "{{ auction.id }}",
+            start_date: "{{ auction.start_date.isoformat }}",
+            duration: "{{ auction.duration|to_milliseconds }}",
+        });
+    </script>
+    <script type="text/javascript" src="{% static 'js/timer.js' %}"></script>
+    
 {% endblock %}

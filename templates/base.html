@@ -136,7 +136,7 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <a class="dropdown-item" href="{% url 'start_auction' %}">Start Auction</a>
-                  <a class="dropdown-item" href="{% url 'my_auctions' identifier=user.id%}">My Auctions</a>
+                  <a class="dropdown-item" href="{% url 'my_auctions' id=user.id%}">My Auctions</a>
                   <a class="dropdown-item" href="{% url 'live_auctions' %}">Live Auctions</a>
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="{% url 'auctions' %}">All Auctions</a>

@@ -8,7 +8,7 @@ import pytz
 # Create your models here.
 
 class Auction(models.Model):
-    seller = models.ForeignKey(User, related_name='seller')
+    seller = models.ForeignKey(User, related_name='auctions')
     painting = models.ForeignKey(Painting, related_name='auctions')
     start_price = models.IntegerField()
     increment = models.IntegerField()

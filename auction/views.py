@@ -38,23 +38,19 @@ def start_auction_view(request):
 
     return render (request, 'start_auction.html', {'auction_form' : auction_form})
 
-def list_auctions_view(request, identifier=None):
+def list_auctions_view(request, id=None):
 
     context = {}
     auctions_list = Auction.objects.all()
-    live_auctions = [obj for obj in auctions_list if obj.is_active]
     context['auctions'] = auctions_list
-    context['live_auctions'] = live_auctions
-    if request.user.is_authenticated():
-        own_auctions_list = Auction.objects.filter(seller=request.user)
-        context['own_auctions'] = own_auctions_list
+    context['id'] = id
     
     return render(request,  'auctions_list.html', context)
 
 def detail_auction_view(request, id=None):
     auction = get_object_or_404(Auction, id=id)
     bid_form = BidForm(auction=auction)    
-    return render(request, 'auction_detail.html', {'auction': auction, 'bid_form': bid_form})
+    return render(request, 'auction_detail.html', {'auction': auction, 'bid_form': bid_form, 'message': 'You have successfully placed a bid.'})
 
 def place_bid(request, id=None):
     auction = get_object_or_404(Auction, id=id)

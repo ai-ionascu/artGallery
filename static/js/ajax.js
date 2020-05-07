@@ -8,17 +8,22 @@ $(function() {
         url: "bid/",
         data: serializedData,
         success: function(response){
-            alert('You have successfully placed a bid.');
+          console.log(response);
+          $('#form_err').hide();
+            $("#alert").fadeIn();
+            setTimeout(function() { $("#alert").fadeOut(); }, 3000);
             $("#place_bid").trigger('reset');
             $('#id_bid').focus();
             var current_price = JSON.parse(response['current_price'])
             $('#current_price').text(`Current Bid Price: ${current_price}`);
         },
         error: function(response){
-          alert(response['responseJSON']['error']['__all__']);
+          console.log(response);
+          $("#form_err").text(`${response['responseJSON']['error']['__all__']}`);
+          $("#form_err").fadeIn();
           $("#place_bid").trigger('reset');
           $('#id_bid').focus();
         }
-      })
-    })
-})
+      });
+    });
+});

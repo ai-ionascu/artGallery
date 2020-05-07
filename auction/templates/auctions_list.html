@@ -1,47 +1,67 @@
 {% extends 'base.html' %}
 
+{% load staticfiles %}
+
 {% load bootstrap_tags %}
+
+{% load custom_tags %}
 
 {% block page_title %}Auctions Page{% endblock %}
 
 {% block page_heading %}
-{% if identifier %}My Auctions
+{% if id %}My Auctions
 {% elif 'live' in request.path %}Live Auctions
 {% else %} Auctions List
 {% endif %}
 {% endblock %}
 
 {% block page_content %}
-{% if identifier %}
+
     <div class="container-fluid">
         <div class="row">
-            {% for oa in own_auctions %}        
-            {% include 'auction_item.html' with auction=oa %}
-            {% empty %}
-                <p>You don't have any auction yet.</p>
-            {% endfor %}
+            {% if id %}
+            {% if user.is_authenticated %}
+                {% for auction in user.auctions.all %}        
+                {% include 'auction_item.html' %}
+                {% empty %}
+                    <p>You don't have any auction yet.</p>
+                {% endfor %}
+            {% endif %}
+
+            {% elif 'live' in request.path %}
+                {% for auction in auctions %}
+                    {% if auction.is_active %}
+                        {% include 'auction_item.html' %}
+                    {% endif %}
+                {% endfor %}
+                {% if auctions|live_count == 0 %}
+                    <p>There are no live auctions.</p>
+                {% endif %}
+                
+            {% else %}
+                {% for auction in auctions %}
+                {% include 'auction_item.html' %}
+                {% empty %}
+                    <p>There are no recorded auctions.</p>
+                {% endfor %}
+            {% endif %}
         </div>
     </div>
-{% elif 'live' in request.path %}
-    <div class="container-fluid">
-        <div class="row">
-            {% for la in live_auctions %}
-            {% include 'auction_item.html' with auction=la %}
-            {% empty %}
-                <p>There are no live auctions.</p>
-            {% endfor %}
-        </div>
-    </div>
-{% else %}
-    <div class="container-fluid">
-        <div class="row">
-            {% for a in auctions %}
-            {% include 'auction_item.html' with auction=a %}
-            {% empty %}
-                <p>There are no recorded auctions.</p>
-            {% endfor %}
-        </div>
-    </div>    
-{% endif %}
+
+{% endblock %}
+
+{% block js %}
+
+<script>
+    var auctions = [];
+    {% for auction in auctions %}
+        auctions.push({
+            pk: "{{ auction.id }}",
+            start_date: "{{ auction.start_date.isoformat }}",
+            duration: "{{ auction.duration|to_milliseconds }}",
+        });
+    {% endfor %}
+</script>
+<script type="text/javascript" src="{% static 'js/timer.js' %}"></script>
 
 {% endblock %}
