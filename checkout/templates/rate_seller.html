@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+
+{% load ratings %}
+
+{% load bootstrap_tags %}
+
+{% block page_title %}Rate Seller{% endblock %}
+
+{% block page_content %}
+<h1>Rate Seller</h1>
+<p>Please rate seller: {{ auction.seller }}</p>
+{% ratings auction.seller %}
+{% endblock %}

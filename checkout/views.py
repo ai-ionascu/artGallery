@@ -54,7 +54,7 @@ def checkout(request, auction_id=None):
                 messages.error(request, "You have successfully paid {}".format(customer.amount/100))
                 request.session['cart'] = {}
                 if auction:
-                    return redirect(reverse('rate_seller'))
+                    return redirect(reverse('rate_seller', kwargs={'seller_id': auction.seller.id,'auction_id': auction.id}))
                 return redirect(reverse('paintings'))
             else:
                 messages.error(request, "Unable to take payment")
@@ -64,3 +64,11 @@ def checkout(request, auction_id=None):
         order_form = OrderForm()
         
     return render(request, "checkout.html", {'order_form': order_form, 'auction':auction, 'publishable': settings.STRIPE_PUBLISHABLE})
+
+def rate_seller(request, seller_id= None, auction_id=None):
+    auction = get_object_or_404(Auction, id=auction_id)
+    if request.user != auction.seller:
+        return render(request, 'rate_seller.html', {'auction': auction})
+    else:
+        messages.error(request,'You should not rate yourself.')
+        return(redirect(reverse('index')))

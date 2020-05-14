@@ -2,6 +2,8 @@
 
 {% load bootstrap_tags %}
 
+{% load ratings %}
+
 {% block page_title %}User Profile Page{% endblock %}
 
 {% block page_heading %}User Profile{% endblock %}
@@ -14,7 +16,7 @@
 
     <img src="{{ user.profile.avatar.url }}" alt="{user.profile.avatar.name}" max-width="200" height="100"/>
     <p>Your email address: {{ user.email }}</p>
-
+    {% ratings user 20 20 read_only %}
     {{ edit_user_form | as_bootstrap }}
     {{ edit_profile_form | as_bootstrap }}
     

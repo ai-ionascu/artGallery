@@ -8,5 +8,5 @@ urlpatterns = [
     url(r'^user/(?P<id>\d+)/$', list_auctions_view, name='my_auctions'),
     url( r'^start/$', start_auction_view, name='start_auction'),
     url( r'^(?P<id>\d+)/$', detail_auction_view, name='auction_detail'),
-    url( r'^(?P<id>\d+)bid/$', place_bid, name='place_bid'),
+    url( r'^(?P<id>\d+)/bid/$', place_bid, name='place_bid'),
 ]
