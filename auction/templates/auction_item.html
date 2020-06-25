@@ -1,32 +1,96 @@
-<div class="col-10 offset-1 offset-sm-0 col-sm-6 col-md-3 card m-2">
-    <h3><a href="{% url 'artist_detail' id=auction.painting.artist.id %}"><strong>{{ auction.painting.artist }}</strong>
-        </a>
-    </h3>
-    <h5><span>Author:
-        </span>
-        <a href="{% url 'auction_detail' id=auction.id %}">
-            {{ auction.painting.name }}
-        </a>
-    </h5>
-    {% if auction.is_active %}
-        <h6>Open Auction</h6>
-    {% endif %}
-    {% if auction.painting.image %}
-    <a href="{% url 'auction_detail' id=auction.id %}">
-        <div style="background: url({{ auction.painting.image.url }}) center/contain no-repeat; height:250px;"></div>
-    </a>
-    {% endif %}
-        <div class="container-fluid my-2">
-            <div class="row">
-                <span>Current Bid Price: <strong>{{ auction.current_price }}</strong></span>
+{% load custom_tags %}
+
+{% if forloop.first %}
+    <div class="col-12">
+        <div class="{% if auctions|length >= 4 %}auctions-box
+            {% elif auctions|length == 3 %}auctions-box-last
+            {% else %}auctions-box-last-1{% endif %}">
+            <div class="row justify-content-center box-content">
+                <div class="col-10 col-md-5 col-lg-7 h-100">
+{% endif %}
+
+{% if forloop.counter|get_remainder:4 == 3 %}
+
+    </div>
+    <div class="col-10 col-md-5 {% if forloop.counter|is_odd_row:4 %} col-lg-3 {% else %} col-lg-7 {% endif %} h-100">
+    <div class="col-12 px-0 py-3" style="height: {% if forloop.last %} 100% {% else %} 33.33% {% endif %};">                      
+
+{% elif forloop.counter|get_remainder:4 == 2 %}
+
+    {% if forloop.counter == auctions|length %}
             </div>
-            <div>{{ auction.bid_set.count }} bids</div>
-            <div id="time_left_{{ auction.id }}" style="color: red;"></div>                
-        </div>
-        <div class="d-flex"><span>Seller: <strong>{{auction.seller}}</strong></span></div>
-    {% if auction.is_active %}
-        <p>Live <i class="fas fa-circle" style="color: #42e467;"></i></p>
+            <div class="col-10 col-md-5 {% if forloop.counter|is_odd_row:4 %} col-lg-3 {% else %} col-lg-7 {% endif %} h-100">
+                <div class="col-12 px-0 py-3" style="height: 100%;">
+    {% elif forloop.counter|add:'1' == auctions|length %}
+        <div class="col-12 px-0 py-3" style="height: 50%;"> 
     {% else %}
-        <p>Completed</p>
+        <div class="col-12 px-0 py-3" style="height: 33.33%;"> 
     {% endif %}
+        
+{% elif forloop.counter|get_remainder:4 == 1 %}
+
+    {% if forloop.counter == auctions|length %} 
+        <div class="col-12 px-0 py-3" style="height: 100%;">
+    {% elif forloop.counter|add:'1' == auctions|length %}
+        <div class="col-12 px-0 py-3" style="height: 100%;">
+    {% elif forloop.counter|add:'2' == auctions|length %} 
+        <div class="col-12 px-0 py-3" style="height: 50% ;">  
+    {% else %}
+        <div class="col-12 px-0 py-3" style="height: 66.667%;">     
+    {% endif %}
+
+{% else %}
+    <div class="col-12 px-0 py-3" style="height: 66.667%;"> 
+{% endif %}
+
+<div class="col-12 h-100 px-0">
+    {% if auction.painting.image %}
+        <div class="h-100 px-0" style="background: url({{ auction.painting.image.url }}) center center/cover no-repeat;">
+            <a href="{% url 'auction_detail' id=auction.id %}" style="display: block; padding-bottom: 100%;"></a>
+            <div class="w-100 text-center" style="color: #fff; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); background: radial-gradient(black, transparent);">
+                <div id="time_left_{{ auction.id }}" ></div>
+                <span>{% if auction.is_active %}Current Bid: {% else %}Sold for: {% endif %}
+                    <strong>{{ auction.current_price }}</strong></span>
+            </div>
+            <div class="col-12 py-2" style="color: #fff; position: absolute; bottom: 0; left: 0; background: rgba(0,0,0,0.3);">
+                <div class="col-12 d-flex">
+                    <span><a href="{% url 'artist_detail' id=auction.painting.artist.id %}"></a><strong>{{ auction.painting.name }}: </strong></span>
+                    <span><a href="{% url 'auction_detail' id=auction.id %}"></a>{{ auction.painting.artist }}</span>      
+                </div>
+                <div class="col-12 d-flex justify-content-between">
+                    <div class="">
+                        <span>Seller: </span><span><strong>{{auction.seller}}</strong></span> 
+                    </div>
+                    {% if auction.is_active %}
+                        <div class="">
+                            <span>{{ auction.bid_set.count }} bids</span>
+                        </div> 
+                        <div class="">
+                            <span>Live <i class="fas fa-circle" style="color: #42e467;"></i></span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>  
+        </div>
+    {% endif %}   
 </div>
+</div>  
+
+{% if forloop.counter|get_remainder:4 == 0 %}
+    {% if not forloop.last %}
+        </div></div></div></div>
+        <div class="col-12">
+        <div class=" {% if forloop.counter|add:'4' <= auctions|length %} auctions-box {% elif forloop.counter|add:'3' == auctions|length %} auctions-box-last {% else %} auctions-box-last-1 {% endif %}">
+        <div class="row justify-content-center box-content">
+        <div class="col-10 {% if forloop.counter|add:'1' != auctions|length %} col-md-5 
+                            {% if forloop.counter|is_odd_row:4 %} col-lg-7 
+                            {% else %} col-lg-3 {% endif %} {% endif %} h-100">
+    {% endif %} 
+{% endif %}  
+
+{% if forloop.last %}
+                </div>  
+            </div>  
+        </div>
+    </div>
+{% endif %}

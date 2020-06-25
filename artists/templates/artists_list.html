@@ -7,11 +7,11 @@
 {% block page_heading %}Artists{% endblock %}
 
 {% block page_content %}
-    <div class="container-fluid">
-        <div class="row">
-            {% for artist in artists %}
-                {% include 'list_artist.html' %}
-            {% endfor %} 
-        </div>
+    <div class="row mx-5 justify-content-center justify-content-lg-between">
+        {% for artist in artists %}
+            <div class="col-10 col-lg-5 mb-3">
+                {% include 'artist_item.html' %}
+            </div> 
+        {% endfor %} 
     </div>
 {% endblock %}

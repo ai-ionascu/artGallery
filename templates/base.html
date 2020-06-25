@@ -1,59 +1,38 @@
 <!DOCTYPE html>
+
 {% load staticfiles %}
+
 <html>
+
     <head>
-        <!-- <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" /> -->
+      {% block style %}
+        <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" />
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="{% static 'star-ratings/css/star-ratings.css' %}">
+      {% endblock %}
         <title>{% block page_title %}{% endblock %}</title>
     </head>
+
     <body>
-        <nav class='navbar navbar-light bg-light'>
-            <ul class='nav'>
 
-              {% if user.is_authenticated %}
-                <li class="nav-item px-3"><a href="{% url 'edit_profile' %}">Profile</a></li>
-                <li class="nav-item px-3"><a href="{% url 'logout' %}">Logout</a></li>
-              {% endif %}
-
-              {% if user.is_authenticated == False %}
-                <li class="nav-item px-3"><a href="{% url 'login' %}">Login</a></li>
-                <li class="nav-item px-3"><a href="{% url 'register' %}">Register</a></li>
-
-              {% elif subscription == False %}
-                <li class="nav-item px-3"><a href="{% url 'unsubscribe' %}">Cancel Subscription</a></li>
-
-              {% elif subscription == True %}
-                <li class="nav-item px-3"><a href="{% url 'resubscribe' %}">Reactivate Subscription</a></li>
-
-              {% endif %} 
-            </ul>
-            <div>
-              <a href="{% url 'view_cart' %}">
-                <i class="fas fa-cart-plus"></i> Cart
-                  {% if painting_count > 0 %}
-                  <label class="badge badge-warning">{{ painting_count }}</label>
-                  {% endif %}
-              </a>
-            </div>
-        </nav>
+<!-- navbar definition -->
         
-        <br>
-        
-        <nav class="navbar navbar-expand-lg navbar-light bg-light p-0">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light p-0" style="position:fixed; top:0; width:100%; max-height:10vh; z-index:1000;">
           <a class="navbar-brand" href="{% url 'index' %}"><img src="/media/default/logo.png" alt="logo" max height=70px></a>
+
+<!-- burger button -->
+
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-        
+          
+<!-- navbar gallery contents -->
+
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-              <li class="nav-item active">
-                <a class="nav-link" href="{% url 'index' %}">Home <span class="sr-only">(current)</span></a>
-              </li>
-              
-              <li class="nav-item dropdown">
+                            
+              <!-- <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Art Trend
                 </a>
@@ -64,10 +43,10 @@
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="{% url 'string_filter' item='trend' string='all' %}">All Trends</a>
                 </div>
-              </li>
+              </li> -->
             
             
-            <li class="nav-item dropdown">
+            <!-- <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Subject
                 </a>
@@ -78,9 +57,9 @@
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="{% url 'string_filter' item='subject' string='all' %}">All Subjects</a>
                 </div>
-            </li>
+            </li> -->
             
-            <li class="nav-item dropdown">
+            <!-- <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Medium
                 </a>
@@ -91,9 +70,9 @@
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="{% url 'string_filter' item='media' string='all' %}">All Media</a>
                 </div>
-              </li>
+              </li> -->
               
-              <li class="nav-item dropdown">
+              <!-- <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Size
                 </a>
@@ -106,7 +85,9 @@
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="{% url 'string_filter' item='size' string='all' %}">All Sizes</a>
                 </div>
-              </li>
+              </li> -->
+              
+<!-- display paintings menu conditionally, add new painting option only for artists -->
               
               {% if user.is_authenticated and user.profile.profile_type == 'ARTIST' %}
               <li class="nav-item dropdown">  
@@ -128,25 +109,23 @@
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'artists' %}">Artists</a>
               </li>
-              
-              {% if user.is_authenticated and user.profile.profile_type == 'ARTIST' %}
+
+<!-- display auctions menu conditionally, start auction and view own auctions options only for artists -->
+                         
               <li class="nav-item dropdown">  
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Auctions
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="{% url 'start_auction' %}">Start Auction</a>
-                  <a class="dropdown-item" href="{% url 'my_auctions' id=user.id%}">My Auctions</a>
+                  {% if user.is_authenticated and user.profile.profile_type == 'ARTIST' %}
+                    <a class="dropdown-item" href="{% url 'start_auction' %}">Start Auction</a>
+                    <a class="dropdown-item" href="{% url 'my_auctions' id=user.id%}">My Auctions</a>
+                    {% endif %}
                   <a class="dropdown-item" href="{% url 'live_auctions' %}">Live Auctions</a>
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="{% url 'auctions' %}">All Auctions</a>
                 </div>
               </li>
-              {% else %}
-              <li class="nav-item">
-                <a class="nav-link" href=" {% url 'auctions' %} " id="navbarDropdown" >Auctions</a>
-              </li>
-              {% endif %}
 
               <li class="nav-item">
                 <a class="nav-link" href="#">About Us</a>
@@ -158,21 +137,60 @@
               
             </ul>
 
+<!-- cart button -->
+
+            <div>
+              <a href="{% url 'view_cart' %}">
+                <i class="fas fa-cart-plus"></i> Cart
+                  {% if painting_count > 0 %}
+                  <label class="badge badge-warning">{{ painting_count }}</label>
+                  {% endif %}
+              </a>
+            </div>
+
+<!-- user account buttons -->
+
+            <ul class='navbar-nav'>
+
+              {% if user.is_authenticated %}
+                <li class="nav-item px-3"><a href="{% url 'edit_profile' %}">Profile</a></li>
+                <li class="nav-item px-3"><a href="{% url 'logout' %}">Logout</a></li>
+              {% endif %}
+
+              {% if user.is_authenticated == False %}
+                <li class="nav-item px-3"><a href="{% url 'login' %}">Login</a></li>
+                <li class="nav-item px-3"><a href="{% url 'register' %}">Register</a></li>
+
+              {% elif subscription == False %}
+                <li class="nav-item px-3"><a href="{% url 'unsubscribe' %}">Cancel Subscription</a></li>
+
+              {% elif subscription == True %}
+                <li class="nav-item px-3"><a href="{% url 'resubscribe' %}">Reactivate Subscription</a></li>
+
+              {% endif %} 
+            </ul>
+
           </div>
         </nav>
         
-        
-        <h1>{% block page_heading %}{% endblock %}</h1>
-        
-        <div>
-            {% if messages %}
-                {% for message in messages %}
-                    {{ message }}
-                {% endfor %}
-            {% endif %}
+        <div class="container-fluid" style="margin-top: 15vh;">
+
+          <div class="row mx-5">
+            <div class="col-10">
+              <h1>{% block page_heading %}{% endblock %}</h1>
+            </div>
+          </div>
+               
+              {% if messages %}
+                  {% for message in messages %}
+                    <div>{{ message }}</div>        
+                  {% endfor %}
+              {% endif %}
+          
+            {% block page_content %}{% endblock %}
+
         </div>
-        
-        {% block page_content %}{% endblock %}
+
         <script src="https://kit.fontawesome.com/e8e6cf91f9.js" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>

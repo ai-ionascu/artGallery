@@ -17,40 +17,52 @@
 
 {% block page_content %}
 
-    <div class="container-fluid">
-        <div class="row">
-            {% if id %}
-            {% if user.is_authenticated %}
-                {% for auction in user.auctions.all %}        
-                {% include 'auction_item.html' %}
-                {% empty %}
-                    <p>You don't have any auction yet.</p>
-                {% endfor %}
-            {% endif %}
+<!-- listing own auctions -->
 
-            {% elif 'live' in request.path %}
-                {% for auction in auctions %}
-                    {% if auction.is_active %}
-                        {% include 'auction_item.html' %}
-                    {% endif %}
-                {% endfor %}
-                {% if auctions|live_count == 0 %}
-                    <p>There are no live auctions.</p>
-                {% endif %}
-                
-            {% else %}
-                {% for auction in auctions %}
+{% if id %}
+    {% if user.is_authenticated %}
+        {% with user.auctions.all as auctions %}
+            {% for auction in auctions %}
                 {% include 'auction_item.html' %}
-                {% empty %}
-                    <p>There are no recorded auctions.</p>
-                {% endfor %}
+            {% empty %}
+                <p>You don't have any auction yet.</p>
+            {% endfor %}
+        {% endwith %}
+    {% endif %}
+
+<!-- listing live auctions -->
+
+{% elif 'live' in request.path %}
+
+    {% with auctions|live_filter as auctions %}
+        {% for auction in auctions %}
+            {% if auction.is_active %}
+                {% include 'auction_item.html' %}
             {% endif %}
-        </div>
-    </div>
+        {% endfor %}
+    {% endwith %}
+
+    {% if auctions|live_count == 0 %}
+        <p>There are no live auctions.</p>
+    {% endif %}
+    
+<!-- listing all auctions, without filters -->
+
+{% else %}
+
+    {% for auction in auctions %}
+        {% include 'auction_item.html' %} 
+    {% empty %}
+        <p>There are no recorded auctions.</p>
+    {% endfor %}
+
+{% endif %}
 
 {% endblock %}
 
 {% block js %}
+
+<!-- passing time data from django auction object through list object to js for timer setup -->
 
 <script>
     var auctions = [];

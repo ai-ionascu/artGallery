@@ -1,0 +1,43 @@
+.square{
+    width: 100%;
+    height: 0;
+    padding-top: 100%;
+}
+
+.bio-short{
+    overflow: hidden;
+    max-height: 7.5rem;
+    word-wrap: normal;
+}
+
+.bio-short::before{
+    position: absolute;
+    content: '...';
+    bottom: 0;
+    right: 0;
+}
+
+@media (min-width: 768px) {
+
+    .auctions-box{
+        padding-top: 100%;
+    }
+    .auctions-box-last{
+        padding-top: 66.667%;
+    }
+    .auctions-box-last-1{
+        padding-top: 33.33%;
+    }
+
+}
+
+@media (min-width: 768px) {
+
+    .box-content{
+        position: absolute; 
+        top:0; 
+        left: 0;
+        bottom: 0; 
+        right: 0;
+    }
+ }

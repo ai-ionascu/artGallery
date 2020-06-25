@@ -5,42 +5,42 @@
 {% block page_title %}Gallery Page{% endblock %}
 
 {% block page_heading %}
-{% if item and id %}{{ item_obj }}
-{% elif item and string != 'all' %}{{ string.capitalize }}
-{% elif item and string == 'all' %}{{ item.capitalize }}
-{% else %}Gallery
-{% endif %}
+
+     {% if item and id %}{{ item_obj }}
+    {% elif item and string != 'all' %}{{ string.capitalize }}
+    {% elif item and string == 'all' %}{{ item.capitalize }}
+    {% else %}Gallery
+    {% endif %}
+
 {% endblock %}
 
 {% block page_content %}
 
-{% if item and string == 'all' %}
+    {% if item and string == 'all' %}
+
         {% for p_set in paintings %}        
             {% for k, v in p_set.items %}
                 {% if v %}
-                    <h3>{{ k }}</h3>
-                    <div class="container-fluid">
-                        <div class="row">
-                            {% for painting in v %}
-                                {% include 'list_item.html' %}
-                            {% endfor %}
-                        </div>
+                    <div class="row justify-content-center">
+                        <h3>{{ k }}</h3>
+                        {% for painting in v %}
+                            {% include 'list_item.html' %}
+                        {% endfor %}
                     </div>
                 {% else %}
                     <h6>{{ k }}</h6>
                 {% endif %}
             {% endfor %} 
         {% endfor %}
-{% else %}
-    <div class="container-fluid">
-        <div class="row">
+
+    {% else %}
+
+        <div class="row justify-content-center">
             {% for painting in paintings %}
                 {% include 'list_item.html' %}
             {% endfor %}
-        </div>
-    </div>
-     
-{% endif %}
-
+        </div>  
+          
+    {% endif %}
 
 {% endblock %}

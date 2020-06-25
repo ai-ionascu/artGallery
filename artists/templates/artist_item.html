@@ -1,0 +1,15 @@
+<div class="row align-items-center">
+    <div class="col-12 col-sm-4 p-3 d-inline-block">
+        {% if artist.image %}
+            <div class="rounded-circle d-inline-block align-middle" style="background: url({{ artist.image.url }}) center/cover no-repeat; width: 100px; height:100px;">
+                <a href="{% url 'artist_detail' id=artist.id %}"></a>
+            </div>
+            <span class="d-inline-block align-middle">
+                <a href="{% url 'artist_detail' id=artist.id %}">{{ artist.artist }}</a>
+            </span>
+        {% endif %}
+    </div>
+    <div class="col-12 col-sm-8 {% if artist.bio %}bio-short{% endif %}">
+        {{ artist.bio }}
+    </div>
+</div>

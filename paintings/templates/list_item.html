@@ -1,23 +1,31 @@
-<br>
-    <div class="col-10 offset-1 offset-sm-0 col-sm-6 col-md-4 card m-2">
-        <h3><a href="{% url 'artist_detail' id=painting.artist.id %}">{{ painting.artist }}</a></h3>
-        <h5><a href="{% url 'paintings' %}{{ painting.id }}">{{ painting.name }}</a></h5>
+<div class="col-10 offset-1 offset-sm-0 col-sm-8 col-md-5 col-lg-3 card m-3 p-0 border-0">
         {% if painting.image %}
-        <a href="{% url 'paintings' %}{{ painting.id }}">
-            <div style="background: url({{ painting.image.url }}) center/contain no-repeat; height:250px;"></div>
-        </a>
-        <p>{{ painting.text|linebreaksbr }}</p>
-        <div>
-            <a href="{% url 'painting_detail' id=painting.id %}">Comments: {{ painting.comments.all.count }}</a>
-            <span>
-                <a href="{% url 'painting_detail' id=painting.id %}">Likes: {{ painting.likes.users.count }}</a></span>
+            <div class="px-0 square" style="background: url({{ painting.image.url }}) 50% 50% no-repeat;">
+                <a href="{% url 'paintings' %}{{ painting.id }}" style="display: block; padding-bottom: 100%;"></a>
+            </div>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-12 d-flex justify-content-between">
+                <h6><a href="{% url 'paintings' %}{{ painting.id }}">{{ painting.name }}</a></h6>
+                <div><i class="fas fa-euro-sign"></i><span> {{ painting.price }}</span></div>
+            </div>
+            <div class="col-12 d-flex">
+                <a class="mr-2" href="{% url 'painting_detail' id=painting.id %}">Comments: {{ painting.comments.all.count }}</a>
+                    <span>
+                        <a href="{% url 'painting_detail' id=painting.id %}">
+                            {% if painting.likes.users.count %}
+                                Likes: {{ painting.likes.users.count }}
+                            {% else %}
+                                Likes: 0
+                            {% endif %}
+                        </a>
+                    </span>
+            </div>
+            <div class="col-12">
+                <h5><a href="{% url 'artist_detail' id=painting.artist.id %}">{{ painting.artist }}</a></h5>
+            </div>
         </div>
-        {% endif %}
-            <div class="d-flex">Price:<span> {{ painting.price }}</span></div>
-        {% if painting.availability %}
-            <p>Available</p>
-        {% else %}
-            <p>Out of Stock</p>
-        {% endif %}
+    
     </div>
 <br>
