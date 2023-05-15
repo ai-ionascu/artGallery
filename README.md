@@ -50,12 +50,11 @@
 ### So far:
 
 - Pyhton / Django Framework
-- SQLite
 - Stripe Payments
 - JQuery
 - HTML
 - Bootstrap
-- GitHub
+- GitHub version control
 
 ### Will be used:
 
